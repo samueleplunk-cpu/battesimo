@@ -250,6 +250,20 @@
             background-color: rgba(212, 175, 55, 0.1);
         }
 
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin-top: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .dimension-info {
+            font-size: 0.8rem;
+            color: var(--color-light-text);
+            margin-top: 5px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .admin-content {
@@ -307,6 +321,10 @@
                             <i class="fas fa-home menu-icon"></i>
                             <span>Home</span>
                         </li>
+                        <li class="menu-item" data-section="invito">
+                            <i class="fas fa-envelope-open-text menu-icon"></i>
+                            <span>Invito</span>
+                        </li>
                         <li class="menu-item" data-section="famiglia">
                             <i class="fas fa-heart menu-icon"></i>
                             <span>Famiglia</span>
@@ -314,6 +332,10 @@
                         <li class="menu-item" data-section="contatti">
                             <i class="fas fa-phone menu-icon"></i>
                             <span>Contatti</span>
+                        </li>
+                        <li class="menu-item" data-section="footer">
+                            <i class="fas fa-shoe-prints menu-icon"></i>
+                            <span>Footer</span>
                         </li>
                     </ul>
                 </div>
@@ -336,6 +358,41 @@
                             <input type="text" id="babyDetails" class="form-input" placeholder="Nata il 15 Marzo 2023">
                             <button class="btn" onclick="saveHomeData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="homeSuccess2">Modifiche salvate con successo!</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Invito Section -->
+                    <div class="admin-section" id="invitoSection" style="display: none;">
+                        <h2 class="section-title">Invito</h2>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="invitoText1">Testo 1</label>
+                            <textarea id="invitoText1" class="form-textarea" placeholder="Mamma e papà mi hanno preparato una festa indimenticabile e sarebbe un piacere immenso poter essere insieme in questo giorno."></textarea>
+                            <button class="btn" onclick="saveInvitoData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="invitoSuccess1">Modifiche salvate con successo!</div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="invitoText2">Testo 2</label>
+                            <textarea id="invitoText2" class="form-textarea" placeholder="Abbiamo sentito dire che verranno fate, draghi, principi e principesse, folletti e unicorni. O forse è solo frutto della mia immaginazione :)"></textarea>
+                            <button class="btn" onclick="saveInvitoData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="invitoSuccess2">Modifiche salvate con successo!</div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="invitoText3">Testo 3</label>
+                            <textarea id="invitoText3" class="form-textarea" placeholder="In ogni caso, questa è la mia prima festa e ti aspetto con affetto!"></textarea>
+                            <button class="btn" onclick="saveInvitoData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="invitoSuccess3">Modifiche salvate con successo!</div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="invitoImage">Immagine della sezione invito</label>
+                            <input type="file" id="invitoImage" class="form-input" accept="image/*">
+                            <p class="dimension-info">Dimensioni consigliate: 400x500px</p>
+                            <img id="invitoImagePreview" class="image-preview" src="" alt="Anteprima immagine">
+                            <button class="btn" onclick="saveInvitoImage()" style="margin-top: 10px;">Salva immagine</button>
+                            <div class="success-message" id="invitoSuccess4">Modifiche salvate con successo!</div>
                         </div>
                     </div>
                     
@@ -404,6 +461,18 @@
                             <div class="success-message" id="contattiSuccess4">Modifiche salvate con successo!</div>
                         </div>
                     </div>
+                    
+                    <!-- Footer Section -->
+                    <div class="admin-section" id="footerSection" style="display: none;">
+                        <h2 class="section-title">Footer</h2>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="footerText">Testo footer</label>
+                            <input type="text" id="footerText" class="form-input" placeholder="Con affetto, la famiglia Rossi">
+                            <button class="btn" onclick="saveFooterData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="footerSuccess">Modifiche salvate con successo!</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -425,6 +494,8 @@
         const loginError = document.getElementById('loginError');
         const menuItems = document.querySelectorAll('.menu-item');
         const adminSections = document.querySelectorAll('.admin-section');
+        const invitoImageInput = document.getElementById('invitoImage');
+        const invitoImagePreview = document.getElementById('invitoImagePreview');
         
         // Gestione del login
         loginForm.addEventListener('submit', function(e) {
@@ -471,11 +542,36 @@
             loginError.textContent = '';
         }
         
+        // Gestione anteprima immagine
+        invitoImageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    invitoImagePreview.src = e.target.result;
+                    invitoImagePreview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        
         // Carica dati dal localStorage
         function loadAdminData() {
             // Home
             document.getElementById('babyName').value = localStorage.getItem('babyName') || 'Emma Rossi';
             document.getElementById('babyDetails').value = localStorage.getItem('babyDetails') || 'Nata il 15 Marzo 2023';
+            
+            // Invito
+            document.getElementById('invitoText1').value = localStorage.getItem('invitoText1') || 'Mamma e papà mi hanno preparato una festa indimenticabile e sarebbe un piacere immenso poter essere insieme in questo giorno.';
+            document.getElementById('invitoText2').value = localStorage.getItem('invitoText2') || 'Abbiamo sentito dire che verranno fate, draghi, principi e principesse, folletti e unicorni. O forse è solo frutto della mia immaginazione :)';
+            document.getElementById('invitoText3').value = localStorage.getItem('invitoText3') || 'In ogni caso, questa è la mia prima festa e ti aspetto con affetto!';
+            
+            // Carica anteprima immagine se presente
+            const savedImage = localStorage.getItem('invitoImage');
+            if (savedImage) {
+                invitoImagePreview.src = savedImage;
+                invitoImagePreview.style.display = 'block';
+            }
             
             // Famiglia
             document.getElementById('patriziaName').value = localStorage.getItem('patriziaName') || 'Patrizia ♡';
@@ -488,6 +584,9 @@
             document.getElementById('contactName2').value = localStorage.getItem('contactName2') || 'Papà Marco';
             document.getElementById('contactPhone1').value = localStorage.getItem('contactPhone1') || '+39 123 456 7890';
             document.getElementById('contactPhone2').value = localStorage.getItem('contactPhone2') || '+39 098 765 4321';
+            
+            // Footer
+            document.getElementById('footerText').value = localStorage.getItem('footerText') || 'Con affetto, la famiglia Rossi';
         }
         
         // Salva dati Home
@@ -502,6 +601,43 @@
                 document.getElementById('homeSuccess').style.display = 'none';
                 document.getElementById('homeSuccess2').style.display = 'none';
             }, 3000);
+        }
+        
+        // Salva dati Invito
+        function saveInvitoData() {
+            localStorage.setItem('invitoText1', document.getElementById('invitoText1').value);
+            localStorage.setItem('invitoText2', document.getElementById('invitoText2').value);
+            localStorage.setItem('invitoText3', document.getElementById('invitoText3').value);
+            
+            // Mostra messaggio di successo
+            document.getElementById('invitoSuccess1').style.display = 'block';
+            document.getElementById('invitoSuccess2').style.display = 'block';
+            document.getElementById('invitoSuccess3').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('invitoSuccess1').style.display = 'none';
+                document.getElementById('invitoSuccess2').style.display = 'none';
+                document.getElementById('invitoSuccess3').style.display = 'none';
+            }, 3000);
+        }
+        
+        // Salva immagine Invito
+        function saveInvitoImage() {
+            const file = invitoImageInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('invitoImage', e.target.result);
+                    
+                    // Mostra messaggio di successo
+                    document.getElementById('invitoSuccess4').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('invitoSuccess4').style.display = 'none';
+                    }, 3000);
+                }
+                reader.readAsDataURL(file);
+            } else {
+                alert('Seleziona un\'immagine prima di salvare.');
+            }
         }
         
         // Salva dati Famiglia
@@ -541,6 +677,17 @@
                 document.getElementById('contattiSuccess2').style.display = 'none';
                 document.getElementById('contattiSuccess3').style.display = 'none';
                 document.getElementById('contattiSuccess4').style.display = 'none';
+            }, 3000);
+        }
+        
+        // Salva dati Footer
+        function saveFooterData() {
+            localStorage.setItem('footerText', document.getElementById('footerText').value);
+            
+            // Mostra messaggio di successo
+            document.getElementById('footerSuccess').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('footerSuccess').style.display = 'none';
             }, 3000);
         }
     </script>

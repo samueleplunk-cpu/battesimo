@@ -769,18 +769,18 @@
             <div class="invito-container fade-in">
                 <div class="invito-image">
                     <div class="invito-frame">
-                        <img src="/battesimo/img/profile.jpg" alt="Immagine Battesimo">
+                        <img id="invitoImage" src="/battesimo/img/profile.jpg" alt="Immagine Battesimo">
                     </div>
                 </div>
                 <div class="invito-text">
                     <h2 class="invito-title">Siete invitati al mio<br>Battesimo</h2>
-                    <p class="invito-message">
+                    <p class="invito-message" id="invitoText1">
                         Mamma e papà mi hanno preparato una festa indimenticabile e sarebbe un piacere immenso poter essere insieme in questo giorno.
                     </p>
-                    <p class="invito-message">
+                    <p class="invito-message" id="invitoText2">
                         Abbiamo sentito dire che verranno fate, draghi, principi e principesse, folletti e unicorni. O forse è solo frutto della mia immaginazione :)
                     </p>
-                    <p class="invito-message">
+                    <p class="invito-message" id="invitoText3">
                         In ogni caso, questa è la mia prima festa e ti aspetto con affetto!
                     </p>
                 </div>
@@ -799,8 +799,8 @@
                     <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Patrizia">
                 </div>
                 <div class="patrizia-rectangle">
-                    <div class="patrizia-name">Patrizia ♡</div>
-                    <div class="patrizia-message">
+                    <div class="patrizia-name" id="patriziaName">Patrizia ♡</div>
+                    <div class="patrizia-message" id="patriziaMessage">
                         Se sei arrivato qui, significa che teniamo molto a te e saremmo felici se fossi con noi in un giorno così speciale!
                     </div>
                 </div>
@@ -808,17 +808,11 @@
             
             <div class="family-members">
                 <div class="family-member fade-in">
-                    <div class="member-icon">
-                        <img src="/battesimo/img/profile.jpg" alt="Genitori">
-                    </div>
                     <p class="member-role">Genitori</p>
                     <h3 class="member-name" id="parentsName">Marco e Laura Rossi</h3>
                 </div>
                 
                 <div class="family-member fade-in">
-                    <div class="member-icon">
-                        <img src="/battesimo/img/profile.jpg" alt="Padrini">
-                    </div>
                     <p class="member-role">Padrini</p>
                     <h3 class="member-name" id="godparentsName">Alessandro e Giulia Bianchi</h3>
                 </div>
@@ -960,7 +954,7 @@
                     <div class="contact-icon">
                         <i class="fas fa-phone"></i>
                     </div>
-                    <div class="contact-name">Mamma Laura</div>
+                    <div class="contact-name" id="contactName1">Mamma Laura</div>
                     <div class="contact-text" id="contactPhone1">+39 123 456 7890</div>
                 </div>
                 
@@ -968,7 +962,7 @@
                     <div class="contact-icon">
                         <i class="fas fa-phone"></i>
                     </div>
-                    <div class="contact-name">Papà Marco</div>
+                    <div class="contact-name" id="contactName2">Papà Marco</div>
                     <div class="contact-text" id="contactPhone2">+39 098 765 4321</div>
                 </div>
             </div>
@@ -978,7 +972,7 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p class="footer-text">Con affetto, la famiglia Rossi</p>
+            <p class="footer-text" id="footerText">Con affetto, la famiglia Rossi</p>
         </div>
     </footer>
 
@@ -1065,6 +1059,64 @@
             document.getElementById('rsvpForm').reset();
         });
         
+        // Carica i dati dal localStorage e aggiorna la pagina
+        function loadAdminData() {
+            // Home
+            if (localStorage.getItem('babyName')) {
+                document.getElementById('babyName').textContent = localStorage.getItem('babyName');
+            }
+            if (localStorage.getItem('babyDetails')) {
+                document.getElementById('babyDetails').textContent = localStorage.getItem('babyDetails');
+            }
+            
+            // Invito
+            if (localStorage.getItem('invitoText1')) {
+                document.getElementById('invitoText1').textContent = localStorage.getItem('invitoText1');
+            }
+            if (localStorage.getItem('invitoText2')) {
+                document.getElementById('invitoText2').textContent = localStorage.getItem('invitoText2');
+            }
+            if (localStorage.getItem('invitoText3')) {
+                document.getElementById('invitoText3').textContent = localStorage.getItem('invitoText3');
+            }
+            if (localStorage.getItem('invitoImage')) {
+                document.getElementById('invitoImage').src = localStorage.getItem('invitoImage');
+            }
+            
+            // Famiglia
+            if (localStorage.getItem('patriziaName')) {
+                document.getElementById('patriziaName').textContent = localStorage.getItem('patriziaName');
+            }
+            if (localStorage.getItem('patriziaMessage')) {
+                document.getElementById('patriziaMessage').textContent = localStorage.getItem('patriziaMessage');
+            }
+            if (localStorage.getItem('parentsName')) {
+                document.getElementById('parentsName').textContent = localStorage.getItem('parentsName');
+            }
+            if (localStorage.getItem('godparentsName')) {
+                document.getElementById('godparentsName').textContent = localStorage.getItem('godparentsName');
+            }
+            
+            // Contatti
+            if (localStorage.getItem('contactName1')) {
+                document.getElementById('contactName1').textContent = localStorage.getItem('contactName1');
+            }
+            if (localStorage.getItem('contactName2')) {
+                document.getElementById('contactName2').textContent = localStorage.getItem('contactName2');
+            }
+            if (localStorage.getItem('contactPhone1')) {
+                document.getElementById('contactPhone1').textContent = localStorage.getItem('contactPhone1');
+            }
+            if (localStorage.getItem('contactPhone2')) {
+                document.getElementById('contactPhone2').textContent = localStorage.getItem('contactPhone2');
+            }
+            
+            // Footer
+            if (localStorage.getItem('footerText')) {
+                document.getElementById('footerText').textContent = localStorage.getItem('footerText');
+            }
+        }
+        
         // Animazioni al caricamento
         window.onload = function() {
             // Animazioni al caricamento
@@ -1081,6 +1133,9 @@
             
             // Gestione menu attivo
             handleActiveMenu();
+            
+            // Carica dati dal pannello admin
+            loadAdminData();
         };
         
         // Crea stelle decorative
@@ -1137,67 +1192,5 @@
         document.getElementById('contactPhone1').textContent = '+39 123 456 7890';
         document.getElementById('contactPhone2').textContent = '+39 098 765 4321';
     </script>
-	
-	<script>
-    // Carica i dati dal localStorage e aggiorna la pagina
-    function loadAdminData() {
-        // Home
-        if (localStorage.getItem('babyName')) {
-            document.getElementById('babyName').textContent = localStorage.getItem('babyName');
-        }
-        if (localStorage.getItem('babyDetails')) {
-            document.getElementById('babyDetails').textContent = localStorage.getItem('babyDetails');
-        }
-        
-        // Famiglia
-        if (localStorage.getItem('patriziaName')) {
-            document.querySelector('.patrizia-name').textContent = localStorage.getItem('patriziaName');
-        }
-        if (localStorage.getItem('patriziaMessage')) {
-            document.querySelector('.patrizia-message').textContent = localStorage.getItem('patriziaMessage');
-        }
-        if (localStorage.getItem('parentsName')) {
-            document.getElementById('parentsName').textContent = localStorage.getItem('parentsName');
-        }
-        if (localStorage.getItem('godparentsName')) {
-            document.getElementById('godparentsName').textContent = localStorage.getItem('godparentsName');
-        }
-        
-        // Contatti
-        if (localStorage.getItem('contactName1')) {
-            document.querySelectorAll('.contact-name')[0].textContent = localStorage.getItem('contactName1');
-        }
-        if (localStorage.getItem('contactName2')) {
-            document.querySelectorAll('.contact-name')[1].textContent = localStorage.getItem('contactName2');
-        }
-        if (localStorage.getItem('contactPhone1')) {
-            document.getElementById('contactPhone1').textContent = localStorage.getItem('contactPhone1');
-        }
-        if (localStorage.getItem('contactPhone2')) {
-            document.getElementById('contactPhone2').textContent = localStorage.getItem('contactPhone2');
-        }
-    }
-    
-    // Esegui al caricamento della pagina
-    window.onload = function() {
-        // Animazioni al caricamento
-        const fadeElements = document.querySelectorAll('.fade-in');
-        fadeElements.forEach((el, index) => {
-            setTimeout(() => {
-                el.style.opacity = '1';
-                el.style.transform = 'translateY(0)';
-            }, index * 200);
-        });
-        
-        // Crea stelle decorative
-        createStars();
-        
-        // Gestione menu attivo
-        handleActiveMenu();
-        
-        // Carica dati dal pannello admin
-        loadAdminData();
-    };
-</script>
 </body>
 </html>
