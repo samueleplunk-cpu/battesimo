@@ -714,6 +714,31 @@
         </div>
     </section>
 
+    <!-- Nuova Sezione Countdown -->
+    <section id="countdown-section">
+        <div class="container">
+            <h2 class="section-title">Ancora poco al grande giorno:</h2>
+            <div class="countdown" id="newCountdown">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="newDays">00</div>
+                    <div class="countdown-label">Giorni</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="newHours">00</div>
+                    <div class="countdown-label">Ore</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="newMinutes">00</div>
+                    <div class="countdown-label">Minuti</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="newSeconds">00</div>
+                    <div class="countdown-label">Secondi</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Luoghi -->
     <section id="luoghi">
         <div class="container">
@@ -849,13 +874,17 @@
         // Data del battesimo (modificare con la data effettiva)
         const baptismDate = new Date('2023-06-10T11:00:00').getTime();
         
-        // Countdown
+        // Data per il nuovo countdown (31 dicembre 2025)
+        const newCountdownDate = new Date('2025-12-31T23:59:59').getTime();
+        
+        // Countdown originale
         function updateCountdown() {
             const now = new Date().getTime();
             const distance = baptismDate - now;
             
             if (distance < 0) {
-                document.getElementById('countdown').innerHTML = "<h3>Il battesimo si è svolto!</h3>";
+                // Rimuove il countdown invece di mostrare il messaggio
+                document.getElementById('countdown').style.display = 'none';
                 return;
             }
             
@@ -870,8 +899,32 @@
             document.getElementById('seconds').innerHTML = seconds.toString().padStart(2, '0');
         }
         
+        // Nuovo countdown
+        function updateNewCountdown() {
+            const now = new Date().getTime();
+            const distance = newCountdownDate - now;
+            
+            if (distance < 0) {
+                document.getElementById('newCountdown').innerHTML = "<h3>Il grande giorno è arrivato!</h3>";
+                return;
+            }
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById('newDays').innerHTML = days.toString().padStart(2, '0');
+            document.getElementById('newHours').innerHTML = hours.toString().padStart(2, '0');
+            document.getElementById('newMinutes').innerHTML = minutes.toString().padStart(2, '0');
+            document.getElementById('newSeconds').innerHTML = seconds.toString().padStart(2, '0');
+        }
+        
         setInterval(updateCountdown, 1000);
         updateCountdown();
+        
+        setInterval(updateNewCountdown, 1000);
+        updateNewCountdown();
         
         // Gestione RSVP
         document.getElementById('rsvpForm').addEventListener('submit', function(e) {
@@ -972,5 +1025,67 @@
         document.getElementById('contactPhone1').textContent = '+39 123 456 7890';
         document.getElementById('contactPhone2').textContent = '+39 098 765 4321';
     </script>
+	
+	<script>
+    // Carica i dati dal localStorage e aggiorna la pagina
+    function loadAdminData() {
+        // Home
+        if (localStorage.getItem('babyName')) {
+            document.getElementById('babyName').textContent = localStorage.getItem('babyName');
+        }
+        if (localStorage.getItem('babyDetails')) {
+            document.getElementById('babyDetails').textContent = localStorage.getItem('babyDetails');
+        }
+        
+        // Famiglia
+        if (localStorage.getItem('patriziaName')) {
+            document.querySelector('.patrizia-name').textContent = localStorage.getItem('patriziaName');
+        }
+        if (localStorage.getItem('patriziaMessage')) {
+            document.querySelector('.patrizia-message').textContent = localStorage.getItem('patriziaMessage');
+        }
+        if (localStorage.getItem('parentsName')) {
+            document.getElementById('parentsName').textContent = localStorage.getItem('parentsName');
+        }
+        if (localStorage.getItem('godparentsName')) {
+            document.getElementById('godparentsName').textContent = localStorage.getItem('godparentsName');
+        }
+        
+        // Contatti
+        if (localStorage.getItem('contactName1')) {
+            document.querySelectorAll('.contact-name')[0].textContent = localStorage.getItem('contactName1');
+        }
+        if (localStorage.getItem('contactName2')) {
+            document.querySelectorAll('.contact-name')[1].textContent = localStorage.getItem('contactName2');
+        }
+        if (localStorage.getItem('contactPhone1')) {
+            document.getElementById('contactPhone1').textContent = localStorage.getItem('contactPhone1');
+        }
+        if (localStorage.getItem('contactPhone2')) {
+            document.getElementById('contactPhone2').textContent = localStorage.getItem('contactPhone2');
+        }
+    }
+    
+    // Esegui al caricamento della pagina
+    window.onload = function() {
+        // Animazioni al caricamento
+        const fadeElements = document.querySelectorAll('.fade-in');
+        fadeElements.forEach((el, index) => {
+            setTimeout(() => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }, index * 200);
+        });
+        
+        // Crea stelle decorative
+        createStars();
+        
+        // Gestione menu attivo
+        handleActiveMenu();
+        
+        // Carica dati dal pannello admin
+        loadAdminData();
+    };
+</script>
 </body>
 </html>

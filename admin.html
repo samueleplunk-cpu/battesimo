@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pannello Admin - Battesimo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-white: #ffffff;
+            --color-gold: #d4af37;
+            --color-light-blue: #e6f2ff;
+            --color-light-gold: #f9f3e3;
+            --color-text: #333333;
+            --color-light-text: #666666;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--color-text);
+            background-color: var(--color-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Login Section */
+        .login-section {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--color-light-gold);
+        }
+
+        .login-form {
+            background-color: var(--color-white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            color: var(--color-gold);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--color-text);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-gold);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--color-gold);
+            color: var(--color-white);
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #c19d2e;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            min-height: 100vh;
+            background-color: var(--color-light-gold);
+        }
+
+        .admin-header {
+            background-color: var(--color-white);
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .admin-title {
+            font-size: 2rem;
+            color: var(--color-gold);
+            text-align: center;
+        }
+
+        .admin-content {
+            display: flex;
+            gap: 30px;
+        }
+
+        /* Sidebar */
+        .admin-sidebar {
+            width: 250px;
+            background-color: var(--color-white);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+        }
+
+        .admin-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .menu-item.active {
+            background-color: rgba(212, 175, 55, 0.2);
+            color: var(--color-gold);
+        }
+
+        .menu-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Content Area */
+        .admin-main {
+            flex: 1;
+            background-color: var(--color-white);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--color-gold);
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--color-gold);
+        }
+
+        .success-message {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--color-white);
+            color: var(--color-text);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-content {
+                flex-direction: column;
+            }
+            
+            .admin-sidebar {
+                width: 100%;
+            }
+            
+            .login-form {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Section -->
+    <section class="login-section" id="loginSection">
+        <div class="container">
+            <div class="login-form">
+                <h1 class="login-title">Pannello Admin</h1>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="username">Username</label>
+                        <input type="text" id="username" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" class="form-input" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-block">Accedi</button>
+                    <div class="error-message" id="loginError"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Panel -->
+    <section class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <div class="container">
+                <h1 class="admin-title">Pannello di Amministrazione</h1>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="admin-content">
+                <!-- Sidebar -->
+                <div class="admin-sidebar">
+                    <ul class="admin-menu">
+                        <li class="menu-item active" data-section="home">
+                            <i class="fas fa-home menu-icon"></i>
+                            <span>Home</span>
+                        </li>
+                        <li class="menu-item" data-section="famiglia">
+                            <i class="fas fa-heart menu-icon"></i>
+                            <span>Famiglia</span>
+                        </li>
+                        <li class="menu-item" data-section="contatti">
+                            <i class="fas fa-phone menu-icon"></i>
+                            <span>Contatti</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="admin-main">
+                    <!-- Home Section -->
+                    <div class="admin-section" id="homeSection">
+                        <h2 class="section-title">Home</h2>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="babyName">Nome del bambino</label>
+                            <input type="text" id="babyName" class="form-input" placeholder="Emma Rossi">
+                            <button class="btn" onclick="saveHomeData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="homeSuccess">Modifiche salvate con successo!</div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="babyDetails">Dettagli del bambino</label>
+                            <input type="text" id="babyDetails" class="form-input" placeholder="Nata il 15 Marzo 2023">
+                            <button class="btn" onclick="saveHomeData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="homeSuccess2">Modifiche salvate con successo!</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Famiglia Section -->
+                    <div class="admin-section" id="famigliaSection" style="display: none;">
+                        <h2 class="section-title">Famiglia</h2>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="patriziaName">Nome nella sezione rettangolo</label>
+                            <input type="text" id="patriziaName" class="form-input" placeholder="Patrizia ♡">
+                            <button class="btn" onclick="saveFamigliaData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="famigliaSuccess1">Modifiche salvate con successo!</div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="patriziaMessage">Messaggio nel rettangolo</label>
+                            <textarea id="patriziaMessage" class="form-textarea" placeholder="Se sei arrivato qui, significa che teniamo molto a te e saremmo felici se fossi con noi in un giorno così speciale!"></textarea>
+                            <button class="btn" onclick="saveFamigliaData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="famigliaSuccess2">Modifiche salvate con successo!</div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="parentsName">Nomi genitori</label>
+                            <input type="text" id="parentsName" class="form-input" placeholder="Marco e Laura Rossi">
+                            <button class="btn" onclick="saveFamigliaData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="famigliaSuccess3">Modifiche salvate con successo!</div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="godparentsName">Nomi padrini</label>
+                            <input type="text" id="godparentsName" class="form-input" placeholder="Alessandro e Giulia Bianchi">
+                            <button class="btn" onclick="saveFamigliaData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="famigliaSuccess4">Modifiche salvate con successo!</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contatti Section -->
+                    <div class="admin-section" id="contattiSection" style="display: none;">
+                        <h2 class="section-title">Contatti</h2>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="contactName1">Nome contatto 1</label>
+                            <input type="text" id="contactName1" class="form-input" placeholder="Mamma Laura">
+                            <button class="btn" onclick="saveContattiData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="contattiSuccess1">Modifiche salvate con successo!</div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="contactName2">Nome contatto 2</label>
+                            <input type="text" id="contactName2" class="form-input" placeholder="Papà Marco">
+                            <button class="btn" onclick="saveContattiData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="contattiSuccess2">Modifiche salvate con successo!</div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="contactPhone1">Telefono mamma</label>
+                            <input type="text" id="contactPhone1" class="form-input" placeholder="+39 123 456 7890">
+                            <button class="btn" onclick="saveContattiData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="contattiSuccess3">Modifiche salvate con successo!</div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="contactPhone2">Telefono papà</label>
+                            <input type="text" id="contactPhone2" class="form-input" placeholder="+39 098 765 4321">
+                            <button class="btn" onclick="saveContattiData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="contattiSuccess4">Modifiche salvate con successo!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </section>
+
+    <script>
+        // Credenziali predefinite
+        const ADMIN_USERNAME = "admin";
+        const ADMIN_PASSWORD = "admin123";
+        
+        // Elementi DOM
+        const loginSection = document.getElementById('loginSection');
+        const adminPanel = document.getElementById('adminPanel');
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const adminSections = document.querySelectorAll('.admin-section');
+        
+        // Gestione del login
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                // Login riuscito
+                loginSection.style.display = 'none';
+                adminPanel.style.display = 'block';
+                loadAdminData();
+            } else {
+                // Login fallito
+                loginError.textContent = 'Username o password non validi';
+            }
+        });
+        
+        // Gestione menu sidebar
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // Rimuovi classe active da tutti gli elementi
+                menuItems.forEach(i => i.classList.remove('active'));
+                // Aggiungi classe active all'elemento cliccato
+                this.classList.add('active');
+                
+                // Nascondi tutte le sezioni
+                adminSections.forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Mostra la sezione corrispondente
+                const sectionId = this.getAttribute('data-section') + 'Section';
+                document.getElementById(sectionId).style.display = 'block';
+            });
+        });
+        
+        // Logout
+        function logout() {
+            adminPanel.style.display = 'none';
+            loginSection.style.display = 'flex';
+            loginForm.reset();
+            loginError.textContent = '';
+        }
+        
+        // Carica dati dal localStorage
+        function loadAdminData() {
+            // Home
+            document.getElementById('babyName').value = localStorage.getItem('babyName') || 'Emma Rossi';
+            document.getElementById('babyDetails').value = localStorage.getItem('babyDetails') || 'Nata il 15 Marzo 2023';
+            
+            // Famiglia
+            document.getElementById('patriziaName').value = localStorage.getItem('patriziaName') || 'Patrizia ♡';
+            document.getElementById('patriziaMessage').value = localStorage.getItem('patriziaMessage') || 'Se sei arrivato qui, significa che teniamo molto a te e saremmo felici se fossi con noi in un giorno così speciale!';
+            document.getElementById('parentsName').value = localStorage.getItem('parentsName') || 'Marco e Laura Rossi';
+            document.getElementById('godparentsName').value = localStorage.getItem('godparentsName') || 'Alessandro e Giulia Bianchi';
+            
+            // Contatti
+            document.getElementById('contactName1').value = localStorage.getItem('contactName1') || 'Mamma Laura';
+            document.getElementById('contactName2').value = localStorage.getItem('contactName2') || 'Papà Marco';
+            document.getElementById('contactPhone1').value = localStorage.getItem('contactPhone1') || '+39 123 456 7890';
+            document.getElementById('contactPhone2').value = localStorage.getItem('contactPhone2') || '+39 098 765 4321';
+        }
+        
+        // Salva dati Home
+        function saveHomeData() {
+            localStorage.setItem('babyName', document.getElementById('babyName').value);
+            localStorage.setItem('babyDetails', document.getElementById('babyDetails').value);
+            
+            // Mostra messaggio di successo
+            document.getElementById('homeSuccess').style.display = 'block';
+            document.getElementById('homeSuccess2').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('homeSuccess').style.display = 'none';
+                document.getElementById('homeSuccess2').style.display = 'none';
+            }, 3000);
+        }
+        
+        // Salva dati Famiglia
+        function saveFamigliaData() {
+            localStorage.setItem('patriziaName', document.getElementById('patriziaName').value);
+            localStorage.setItem('patriziaMessage', document.getElementById('patriziaMessage').value);
+            localStorage.setItem('parentsName', document.getElementById('parentsName').value);
+            localStorage.setItem('godparentsName', document.getElementById('godparentsName').value);
+            
+            // Mostra messaggio di successo
+            document.getElementById('famigliaSuccess1').style.display = 'block';
+            document.getElementById('famigliaSuccess2').style.display = 'block';
+            document.getElementById('famigliaSuccess3').style.display = 'block';
+            document.getElementById('famigliaSuccess4').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('famigliaSuccess1').style.display = 'none';
+                document.getElementById('famigliaSuccess2').style.display = 'none';
+                document.getElementById('famigliaSuccess3').style.display = 'none';
+                document.getElementById('famigliaSuccess4').style.display = 'none';
+            }, 3000);
+        }
+        
+        // Salva dati Contatti
+        function saveContattiData() {
+            localStorage.setItem('contactName1', document.getElementById('contactName1').value);
+            localStorage.setItem('contactName2', document.getElementById('contactName2').value);
+            localStorage.setItem('contactPhone1', document.getElementById('contactPhone1').value);
+            localStorage.setItem('contactPhone2', document.getElementById('contactPhone2').value);
+            
+            // Mostra messaggio di successo
+            document.getElementById('contattiSuccess1').style.display = 'block';
+            document.getElementById('contattiSuccess2').style.display = 'block';
+            document.getElementById('contattiSuccess3').style.display = 'block';
+            document.getElementById('contattiSuccess4').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('contattiSuccess1').style.display = 'none';
+                document.getElementById('contattiSuccess2').style.display = 'none';
+                document.getElementById('contattiSuccess3').style.display = 'none';
+                document.getElementById('contattiSuccess4').style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
