@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battesimo - Invito</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-white: #ffffff;
+            --color-gold: #d4af37;
+            --color-light-blue: #e6f2ff;
+            --color-light-gold: #f9f3e3;
+            --color-text: #333333;
+            --color-light-text: #666666;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--color-text);
+            background-color: var(--color-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Sidebar Menu */
+        .sidebar-menu {
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 0 15px 15px 0;
+            padding: 20px 10px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--color-light-text);
+            transition: all 0.3s ease;
+            padding: 10px 5px;
+            border-radius: 8px;
+        }
+
+        .menu-item:hover {
+            color: var(--color-gold);
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .menu-item.active {
+            color: var(--color-gold);
+        }
+
+        .menu-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .menu-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Header */
+        header {
+            background: url('/battesimo/img/background-home.jpeg') center/cover no-repeat;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            z-index: 0;
+        }
+
+        .angel-wing {
+            position: absolute;
+            width: 200px;
+            height: 300px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150"><path fill="none" stroke="%23d4af37" stroke-width="0.5" d="M50,10 C30,30 10,50 10,80 C10,110 30,130 50,140 C70,130 90,110 90,80 C90,50 70,30 50,10 Z"/></svg>') no-repeat center;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .wing-left {
+            left: -50px;
+            top: 20%;
+            transform: rotate(-10deg);
+        }
+
+        .wing-right {
+            right: -50px;
+            top: 20%;
+            transform: scaleX(-1) rotate(-10deg);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+        }
+
+        .header-title {
+            font-size: 3.5rem;
+            color: var(--color-gold);
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .baby-name {
+            font-size: 2.5rem;
+            margin: 20px 0;
+            color: var(--color-text);
+            position: relative;
+            display: inline-block;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+        }
+
+        .baby-name:before, .baby-name:after {
+            content: "✤";
+            color: var(--color-gold);
+            margin: 0 15px;
+            font-size: 1.5rem;
+        }
+
+        .baby-details {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: var(--color-text);
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0;
+            gap: 15px;
+        }
+
+        .countdown-item {
+            background-color: var(--color-white);
+            border-radius: 10px;
+            padding: 15px 10px;
+            min-width: 80px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .countdown-number {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--color-gold);
+        }
+
+        .countdown-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--color-light-text);
+        }
+
+        /* Sezioni */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 50px;
+            color: var(--color-gold);
+            position: relative;
+        }
+
+        .section-title:after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 2px;
+            background-color: var(--color-gold);
+            margin: 15px auto;
+        }
+
+        .section-bg {
+            background-color: var(--color-light-gold);
+        }
+
+        /* Famiglia */
+        .family-members {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .family-member {
+            text-align: center;
+            width: 200px;
+        }
+
+        .member-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--color-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--color-gold);
+        }
+
+        .member-icon i {
+            font-size: 2rem;
+            color: var(--color-gold);
+        }
+
+        .member-role {
+            font-size: 0.9rem;
+            color: var(--color-gold);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .member-name {
+            font-size: 1.2rem;
+            color: var(--color-text);
+        }
+
+        /* Rettangolo Patrizia */
+        .patrizia-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto 40px;
+            max-width: 500px;
+        }
+
+        .patrizia-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 3px solid var(--color-gold);
+            box-shadow: var(--shadow);
+        }
+
+        .patrizia-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .patrizia-rectangle {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 25px 20px;
+            border: 1px solid var(--color-gold);
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .patrizia-rectangle:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .patrizia-rectangle::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+        }
+
+        .patrizia-rectangle::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+        }
+
+        .patrizia-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--color-text);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .patrizia-message {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            color: var(--color-light-text);
+            text-align: center;
+            line-height: 1.5;
+            max-width: 90%;
+        }
+
+        /* Luoghi */
+        .ceremony-details {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .detail-card {
+            background-color: var(--color-white);
+            border-radius: 15px;
+            padding: 30px;
+            width: 300px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .detail-icon {
+            font-size: 2.5rem;
+            color: var(--color-gold);
+            margin-bottom: 20px;
+        }
+
+        .detail-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--color-text);
+        }
+
+        .detail-text {
+            color: var(--color-light-text);
+        }
+
+        /* RSVP */
+        .rsvp-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--color-white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--color-text);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--color-gold);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--color-gold);
+            color: var(--color-white);
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #c19d2e;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        /* Gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .gallery-item {
+            border-radius: 10px;
+            overflow: hidden;
+            height: 250px;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Contatti */
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 10px;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--color-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+        }
+
+        .contact-icon i {
+            font-size: 1.2rem;
+            color: var(--color-gold);
+        }
+
+        .contact-name {
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .contact-text {
+            color: var(--color-text);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--color-light-blue);
+            padding: 40px 0;
+            text-align: center;
+            color: var(--color-light-text);
+        }
+
+        .footer-text {
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar-menu {
+                display: none;
+            }
+            
+            .header-title {
+                font-size: 2.5rem;
+            }
+            
+            .baby-name {
+                font-size: 2rem;
+            }
+            
+            .countdown {
+                flex-wrap: wrap;
+            }
+            
+            .countdown-item {
+                min-width: 70px;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .detail-card {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .rsvp-form {
+                padding: 20px;
+            }
+            
+            .patrizia-container {
+                margin-bottom: 30px;
+            }
+            
+            .patrizia-image {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .patrizia-name {
+                font-size: 1.5rem;
+            }
+            
+            .patrizia-message {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Animazioni */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .star {
+            position: absolute;
+            background-color: var(--color-gold);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: twinkle 3s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; }
+            100% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Menu -->
+    <nav class="sidebar-menu">
+        <a href="#home" class="menu-item active">
+            <i class="fas fa-home menu-icon"></i>
+            <span class="menu-label">Home</span>
+        </a>
+        <a href="#famiglia" class="menu-item">
+            <i class="fas fa-heart menu-icon"></i>
+            <span class="menu-label">Famiglia</span>
+        </a>
+        <a href="#luoghi" class="menu-item">
+            <i class="fas fa-map-marker-alt menu-icon"></i>
+            <span class="menu-label">Luoghi</span>
+        </a>
+        <a href="#rsvp" class="menu-item">
+            <i class="fas fa-envelope menu-icon"></i>
+            <span class="menu-label">RSVP</span>
+        </a>
+        <a href="#gallery" class="menu-item">
+            <i class="fas fa-images menu-icon"></i>
+            <span class="menu-label">Gallery</span>
+        </a>
+        <a href="#contatti" class="menu-item">
+            <i class="fas fa-phone menu-icon"></i>
+            <span class="menu-label">Contatti</span>
+        </a>
+    </nav>
+
+    <!-- Header -->
+    <header id="home">
+        <div class="header-overlay"></div>
+        <div class="angel-wing wing-left"></div>
+        <div class="angel-wing wing-right"></div>
+        
+        <div class="header-content fade-in">
+            <h1 class="header-title">Battesimo</h1>
+            <h2 class="baby-name" id="babyName">Emma Rossi</h2>
+            <p class="baby-details" id="babyDetails">Nata il 15 Marzo 2023</p>
+            
+            <div class="countdown" id="countdown">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="days">00</div>
+                    <div class="countdown-label">Giorni</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="hours">00</div>
+                    <div class="countdown-label">Ore</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="minutes">00</div>
+                    <div class="countdown-label">Minuti</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="seconds">00</div>
+                    <div class="countdown-label">Secondi</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Famiglia -->
+    <section id="famiglia" class="section-bg">
+        <div class="container">
+            <h2 class="section-title">La Famiglia</h2>
+            
+            <!-- Rettangolo Patrizia -->
+            <div class="patrizia-container fade-in">
+                <div class="patrizia-image">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Patrizia">
+                </div>
+                <div class="patrizia-rectangle">
+                    <div class="patrizia-name">Patrizia ♡</div>
+                    <div class="patrizia-message">
+                        Se sei arrivato qui, significa che teniamo molto a te e saremmo felici se fossi con noi in un giorno così speciale!
+                    </div>
+                </div>
+            </div>
+            
+            <div class="family-members">
+                <div class="family-member fade-in">
+                    <div class="member-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <p class="member-role">Genitori</p>
+                    <h3 class="member-name" id="parentsName">Marco e Laura Rossi</h3>
+                </div>
+                
+                <div class="family-member fade-in">
+                    <div class="member-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <p class="member-role">Padrini</p>
+                    <h3 class="member-name" id="godparentsName">Alessandro e Giulia Bianchi</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Luoghi -->
+    <section id="luoghi">
+        <div class="container">
+            <h2 class="section-title">Luoghi - Dove e Quando</h2>
+            <div class="ceremony-details">
+                <div class="detail-card fade-in">
+                    <div class="detail-icon">
+                        <i class="far fa-calendar-alt"></i>
+                    </div>
+                    <h3 class="detail-title">Data e Ora</h3>
+                    <p class="detail-text" id="ceremonyDate">Sabato, 10 Giugno 2023</p>
+                    <p class="detail-text" id="ceremonyTime">Ore 11:00</p>
+                </div>
+                
+                <div class="detail-card fade-in">
+                    <div class="detail-icon">
+                        <i class="fas fa-church"></i>
+                    </div>
+                    <h3 class="detail-title">Chiesa</h3>
+                    <p class="detail-text" id="churchName">Chiesa di Santa Maria</p>
+                    <p class="detail-text" id="churchAddress">Piazza del Duomo, 1 - Milano</p>
+                </div>
+                
+                <div class="detail-card fade-in">
+                    <div class="detail-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3 class="detail-title">Ricevimento</h3>
+                    <p class="detail-text" id="receptionLocation">Ristorante La Collina</p>
+                    <p class="detail-text" id="receptionAddress">Via Roma, 15 - Milano</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP -->
+    <section id="rsvp">
+        <div class="container">
+            <h2 class="section-title">Conferma Partecipazione</h2>
+            <div class="rsvp-form fade-in">
+                <form id="rsvpForm">
+                    <div class="form-group">
+                        <label class="form-label" for="guestName">Nome e Cognome</label>
+                        <input type="text" id="guestName" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="guestEmail">Email</label>
+                        <input type="email" id="guestEmail" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="guestPhone">Telefono</label>
+                        <input type="tel" id="guestPhone" class="form-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="guestCount">Numero di partecipanti</label>
+                        <select id="guestCount" class="form-select" required>
+                            <option value="" disabled selected>Seleziona</option>
+                            <option value="1">1 persona</option>
+                            <option value="2">2 persone</option>
+                            <option value="3">3 persone</option>
+                            <option value="4">4 persone</option>
+                            <option value="5">5 o più persone</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="guestMessage">Messaggio (opzionale)</label>
+                        <textarea id="guestMessage" class="form-textarea" placeholder="Scrivi un messaggio per la famiglia..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-block">Conferma Partecipazione</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section id="gallery" class="section-bg">
+        <div class="container">
+            <h2 class="section-title">Galleria</h2>
+            <div class="gallery">
+                <div class="gallery-item fade-in">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Foto 1">
+                </div>
+                <div class="gallery-item fade-in">
+                    <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Foto 2">
+                </div>
+                <div class="gallery-item fade-in">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Foto 3">
+                </div>
+                <div class="gallery-item fade-in">
+                    <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Foto 4">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contatti -->
+    <section id="contatti" class="section-bg">
+        <div class="container">
+            <h2 class="section-title">Contatti</h2>
+            <div class="contact-info">
+                <div class="contact-item fade-in">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-name">Mamma Laura</div>
+                    <div class="contact-text" id="contactPhone1">+39 123 456 7890</div>
+                </div>
+                
+                <div class="contact-item fade-in">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-name">Papà Marco</div>
+                    <div class="contact-text" id="contactPhone2">+39 098 765 4321</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="footer-text">Con affetto, la famiglia Rossi</p>
+        </div>
+    </footer>
+
+    <script>
+        // Data del battesimo (modificare con la data effettiva)
+        const baptismDate = new Date('2023-06-10T11:00:00').getTime();
+        
+        // Countdown
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = baptismDate - now;
+            
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML = "<h3>Il battesimo si è svolto!</h3>";
+                return;
+            }
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').innerHTML = days.toString().padStart(2, '0');
+            document.getElementById('hours').innerHTML = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').innerHTML = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').innerHTML = seconds.toString().padStart(2, '0');
+        }
+        
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+        
+        // Gestione RSVP
+        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const guestName = document.getElementById('guestName').value;
+            const guestEmail = document.getElementById('guestEmail').value;
+            const guestCount = document.getElementById('guestCount').value;
+            
+            // Salvataggio dati (qui si può implementare il salvataggio su server)
+            const rsvpData = {
+                name: guestName,
+                email: guestEmail,
+                phone: document.getElementById('guestPhone').value,
+                count: guestCount,
+                message: document.getElementById('guestMessage').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Salva nei localStorage
+            let existingRSVPs = JSON.parse(localStorage.getItem('baptismRSVPs')) || [];
+            existingRSVPs.push(rsvpData);
+            localStorage.setItem('baptismRSVPs', JSON.stringify(existingRSVPs));
+            
+            alert('Grazie per la tua conferma! Ti aspettiamo al battesimo.');
+            document.getElementById('rsvpForm').reset();
+        });
+        
+        // Animazioni al caricamento
+        window.onload = function() {
+            // Animazioni al caricamento
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+            
+            // Crea stelle decorative
+            createStars();
+            
+            // Gestione menu attivo
+            handleActiveMenu();
+        };
+        
+        // Crea stelle decorative
+        function createStars() {
+            const header = document.querySelector('header');
+            for (let i = 0; i < 15; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 5 + 2 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                header.appendChild(star);
+            }
+        }
+        
+        // Gestione menu attivo durante lo scroll
+        function handleActiveMenu() {
+            const sections = document.querySelectorAll('section, header');
+            const menuItems = document.querySelectorAll('.menu-item');
+            
+            window.addEventListener('scroll', function() {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (scrollY >= (sectionTop - 200)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                menuItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href').substring(1) === current) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+        }
+        
+        // Personalizzazione dati (questi possono essere modificati)
+        document.getElementById('babyName').textContent = 'Emma Rossi';
+        document.getElementById('babyDetails').textContent = 'Nata il 15 Marzo 2023';
+        document.getElementById('ceremonyDate').textContent = 'Sabato, 10 Giugno 2023';
+        document.getElementById('ceremonyTime').textContent = 'Ore 11:00';
+        document.getElementById('churchName').textContent = 'Chiesa di Santa Maria';
+        document.getElementById('churchAddress').textContent = 'Piazza del Duomo, 1 - Milano';
+        document.getElementById('receptionLocation').textContent = 'Ristorante La Collina';
+        document.getElementById('receptionAddress').textContent = 'Via Roma, 15 - Milano';
+        document.getElementById('parentsName').textContent = 'Marco e Laura Rossi';
+        document.getElementById('godparentsName').textContent = 'Alessandro e Giulia Bianchi';
+        document.getElementById('contactPhone1').textContent = '+39 123 456 7890';
+        document.getElementById('contactPhone2').textContent = '+39 098 765 4321';
+    </script>
+</body>
+</html>
