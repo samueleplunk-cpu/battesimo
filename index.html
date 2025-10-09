@@ -225,6 +225,62 @@
             background-color: var(--color-light-gold);
         }
 
+        /* NUOVA SEZIONE INVITO */
+        .invito-section {
+            padding: 80px 0;
+        }
+
+        .invito-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1000px;
+            margin: 0 auto;
+            gap: 50px;
+        }
+
+        .invito-image {
+            flex: 1;
+            position: relative;
+            max-width: 400px;
+        }
+
+        .invito-frame {
+            width: 100%;
+            height: 500px;
+            border: 15px solid var(--color-gold);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+            background-color: var(--color-white);
+        }
+
+        .invito-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .invito-text {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .invito-title {
+            font-size: 2.5rem;
+            color: var(--color-text);
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .invito-message {
+            font-size: 1.1rem;
+            color: var(--color-light-text);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
         /* Famiglia */
         .family-members {
             display: flex;
@@ -240,8 +296,8 @@
         }
 
         .member-icon {
-            width: 100px;
-            height: 100px;
+            width: 150px; /* Foto più grande */
+            height: 150px; /* Foto più grande */
             border-radius: 50%;
             background-color: var(--color-white);
             display: flex;
@@ -250,6 +306,13 @@
             margin: 0 auto 20px;
             box-shadow: var(--shadow);
             border: 2px solid var(--color-gold);
+            overflow: hidden; /* Per far sì che l'immagine sia contenuta nel cerchio */
+        }
+
+        .member-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .member-icon i {
@@ -589,6 +652,26 @@
             .patrizia-message {
                 font-size: 0.9rem;
             }
+            
+            /* Responsive per nuova sezione invito */
+            .invito-container {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .invito-frame {
+                height: 400px;
+            }
+            
+            .invito-title {
+                font-size: 2rem;
+            }
+            
+            /* Responsive per foto famiglia più grande */
+            .member-icon {
+                width: 120px;
+                height: 120px;
+            }
         }
 
         /* Animazioni */
@@ -621,6 +704,10 @@
         <a href="#home" class="menu-item active">
             <i class="fas fa-home menu-icon"></i>
             <span class="menu-label">Home</span>
+        </a>
+        <a href="#invito" class="menu-item">
+            <i class="fas fa-envelope-open-text menu-icon"></i>
+            <span class="menu-label">Invito</span>
         </a>
         <a href="#famiglia" class="menu-item">
             <i class="fas fa-heart menu-icon"></i>
@@ -676,6 +763,31 @@
         </div>
     </header>
 
+    <!-- NUOVA SEZIONE INVITO -->
+    <section id="invito" class="invito-section">
+        <div class="container">
+            <div class="invito-container fade-in">
+                <div class="invito-image">
+                    <div class="invito-frame">
+                        <img src="/battesimo/img/profile.jpg" alt="Immagine Battesimo">
+                    </div>
+                </div>
+                <div class="invito-text">
+                    <h2 class="invito-title">Siete invitati al mio<br>Battesimo</h2>
+                    <p class="invito-message">
+                        Mamma e papà mi hanno preparato una festa indimenticabile e sarebbe un piacere immenso poter essere insieme in questo giorno.
+                    </p>
+                    <p class="invito-message">
+                        Abbiamo sentito dire che verranno fate, draghi, principi e principesse, folletti e unicorni. O forse è solo frutto della mia immaginazione :)
+                    </p>
+                    <p class="invito-message">
+                        In ogni caso, questa è la mia prima festa e ti aspetto con affetto!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Famiglia -->
     <section id="famiglia" class="section-bg">
         <div class="container">
@@ -697,7 +809,7 @@
             <div class="family-members">
                 <div class="family-member fade-in">
                     <div class="member-icon">
-                        <i class="fas fa-heart"></i>
+                        <img src="/battesimo/img/profile.jpg" alt="Genitori">
                     </div>
                     <p class="member-role">Genitori</p>
                     <h3 class="member-name" id="parentsName">Marco e Laura Rossi</h3>
@@ -705,7 +817,7 @@
                 
                 <div class="family-member fade-in">
                     <div class="member-icon">
-                        <i class="fas fa-user-friends"></i>
+                        <img src="/battesimo/img/profile.jpg" alt="Padrini">
                     </div>
                     <p class="member-role">Padrini</p>
                     <h3 class="member-name" id="godparentsName">Alessandro e Giulia Bianchi</h3>
