@@ -1012,16 +1012,24 @@
     </footer>
 
     <script>
-        // Data del battesimo (modificare con la data effettiva)
-        const baptismDate = new Date('2023-06-10T11:00:00').getTime();
+        // Funzione per ottenere la data dell'evento dal localStorage
+        function getEventDate() {
+            const savedDate = localStorage.getItem('baptismEventDate');
+            const savedTime = localStorage.getItem('baptismEventTime');
+            
+            if (savedDate && savedTime) {
+                return new Date(`${savedDate}T${savedTime}`).getTime();
+            }
+            
+            // Data di fallback predefinita
+            return new Date('2023-06-10T11:00:00').getTime();
+        }
         
-        // Data per il nuovo countdown (31 dicembre 2025)
-        const newCountdownDate = new Date('2025-12-31T23:59:59').getTime();
-        
-        // Countdown originale
+        // Countdown principale nell'header
         function updateCountdown() {
+            const eventDate = getEventDate();
             const now = new Date().getTime();
-            const distance = baptismDate - now;
+            const distance = eventDate - now;
             
             if (distance < 0) {
                 // Rimuove il countdown invece di mostrare il messaggio
@@ -1040,10 +1048,11 @@
             document.getElementById('seconds').innerHTML = seconds.toString().padStart(2, '0');
         }
         
-        // Nuovo countdown
+        // Nuovo countdown nella sezione dedicata
         function updateNewCountdown() {
+            const eventDate = getEventDate();
             const now = new Date().getTime();
-            const distance = newCountdownDate - now;
+            const distance = eventDate - now;
             
             if (distance < 0) {
                 document.getElementById('newCountdown').innerHTML = "<h3>Il grande giorno è arrivato!</h3>";
@@ -1061,6 +1070,7 @@
             document.getElementById('newSeconds').innerHTML = seconds.toString().padStart(2, '0');
         }
         
+        // Aggiorna i countdown ogni secondo
         setInterval(updateCountdown, 1000);
         updateCountdown();
         

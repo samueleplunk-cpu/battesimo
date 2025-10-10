@@ -232,6 +232,15 @@
             display: none;
         }
 
+        .error-message {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
         .logout-btn {
             position: fixed;
             top: 20px;
@@ -262,6 +271,14 @@
             font-size: 0.8rem;
             color: var(--color-light-text);
             margin-top: 5px;
+        }
+
+        .current-date-info {
+            background-color: rgba(212, 175, 55, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid var(--color-gold);
         }
 
         /* Responsive */
@@ -328,6 +345,10 @@
                         <li class="menu-item" data-section="famiglia">
                             <i class="fas fa-heart menu-icon"></i>
                             <span>Famiglia</span>
+                        </li>
+                        <li class="menu-item" data-section="countdown">
+                            <i class="fas fa-clock menu-icon"></i>
+                            <span>Countdown</span>
                         </li>
                         <li class="menu-item" data-section="contatti">
                             <i class="fas fa-phone menu-icon"></i>
@@ -426,6 +447,30 @@
                             <input type="text" id="godparentsName" class="form-input" placeholder="Alessandro e Giulia Bianchi">
                             <button class="btn" onclick="saveFamigliaData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="famigliaSuccess4">Modifiche salvate con successo!</div>
+                        </div>
+                    </div>
+                    
+                    <!-- NUOVA SEZIONE COUNTDOWN -->
+                    <div class="admin-section" id="countdownSection" style="display: none;">
+                        <h2 class="section-title">Countdown</h2>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="eventDate">Data dell'evento</label>
+                            <input type="date" id="eventDate" class="form-input" required>
+                            <div class="error-message" id="dateError"></div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="eventTime">Ora dell'evento</label>
+                            <input type="time" id="eventTime" class="form-input" required>
+                        </div>
+                        
+                        <button class="btn" onclick="saveCountdownData()">Salva data e ora</button>
+                        <div class="success-message" id="countdownSuccess">Data e ora salvate con successo!</div>
+                        
+                        <div class="current-date-info">
+                            <h4>Data attualmente impostata:</h4>
+                            <p id="currentDateDisplay">Nessuna data impostata</p>
                         </div>
                     </div>
                     
@@ -579,6 +624,21 @@
             document.getElementById('parentsName').value = localStorage.getItem('parentsName') || 'Marco e Laura Rossi';
             document.getElementById('godparentsName').value = localStorage.getItem('godparentsName') || 'Alessandro e Giulia Bianchi';
             
+            // Countdown - Carica data e ora salvate
+            const savedDate = localStorage.getItem('baptismEventDate');
+            const savedTime = localStorage.getItem('baptismEventTime');
+            
+            if (savedDate) {
+                document.getElementById('eventDate').value = savedDate;
+            }
+            
+            if (savedTime) {
+                document.getElementById('eventTime').value = savedTime;
+            }
+            
+            // Aggiorna la visualizzazione della data corrente
+            updateCurrentDateDisplay();
+            
             // Contatti
             document.getElementById('contactName1').value = localStorage.getItem('contactName1') || 'Mamma Laura';
             document.getElementById('contactName2').value = localStorage.getItem('contactName2') || 'Papà Marco';
@@ -587,6 +647,60 @@
             
             // Footer
             document.getElementById('footerText').value = localStorage.getItem('footerText') || 'Con affetto, la famiglia Rossi';
+        }
+        
+        // Aggiorna la visualizzazione della data corrente
+        function updateCurrentDateDisplay() {
+            const savedDate = localStorage.getItem('baptismEventDate');
+            const savedTime = localStorage.getItem('baptismEventTime');
+            
+            if (savedDate && savedTime) {
+                const eventDate = new Date(`${savedDate}T${savedTime}`);
+                const options = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+                const formattedDate = eventDate.toLocaleDateString('it-IT', options);
+                document.getElementById('currentDateDisplay').textContent = formattedDate;
+            } else {
+                document.getElementById('currentDateDisplay').textContent = 'Nessuna data impostata (verrà utilizzata la data predefinita: 10 Giugno 2023, 11:00)';
+            }
+        }
+        
+        // Salva dati Countdown
+        function saveCountdownData() {
+            const eventDate = document.getElementById('eventDate').value;
+            const eventTime = document.getElementById('eventTime').value;
+            
+            // Validazione: controlla che la data non sia nel passato
+            const selectedDateTime = new Date(`${eventDate}T${eventTime}`);
+            const now = new Date();
+            
+            if (selectedDateTime <= now) {
+                document.getElementById('dateError').textContent = 'La data e l\'ora devono essere nel futuro!';
+                document.getElementById('dateError').style.display = 'block';
+                return;
+            }
+            
+            // Nascondi eventuali errori precedenti
+            document.getElementById('dateError').style.display = 'none';
+            
+            // Salva nel localStorage
+            localStorage.setItem('baptismEventDate', eventDate);
+            localStorage.setItem('baptismEventTime', eventTime);
+            
+            // Aggiorna la visualizzazione
+            updateCurrentDateDisplay();
+            
+            // Mostra messaggio di successo
+            document.getElementById('countdownSuccess').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('countdownSuccess').style.display = 'none';
+            }, 3000);
         }
         
         // Salva dati Home
