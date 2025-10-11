@@ -446,6 +446,11 @@
                             <i class="fas fa-heart menu-icon"></i>
                             <span>Famiglia</span>
                         </li>
+                        <!-- NUOVA SEZIONE LUOGHI -->
+                        <li class="menu-item" data-section="luoghi">
+                            <i class="fas fa-map-marker-alt menu-icon"></i>
+                            <span>Luoghi</span>
+                        </li>
                         <li class="menu-item" data-section="countdown">
                             <i class="fas fa-clock menu-icon"></i>
                             <span>Countdown</span>
@@ -562,6 +567,39 @@
                             <input type="text" id="godparentsName" class="form-input" placeholder="Alessandro e Giulia Bianchi">
                             <button class="btn" onclick="saveFamigliaData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="famigliaSuccess4">Modifiche salvate con successo!</div>
+                        </div>
+                    </div>
+                    
+                    <!-- NUOVA SEZIONE LUOGHI -->
+                    <div class="admin-section" id="luoghiSection" style="display: none;">
+                        <h2 class="section-title">Luoghi</h2>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="churchName">Nome della chiesa</label>
+                            <input type="text" id="churchName" class="form-input" placeholder="Chiesa di Santa Maria">
+                            <button class="btn" onclick="saveLuoghiData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="luoghiSuccess1">Modifiche salvate con successo!</div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="churchAddress">Indirizzo della chiesa</label>
+                            <input type="text" id="churchAddress" class="form-input" placeholder="Piazza del Duomo, 1 - Milano">
+                            <button class="btn" onclick="saveLuoghiData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="luoghiSuccess2">Modifiche salvate con successo!</div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="receptionLocation">Nome del ristorante/ricevimento</label>
+                            <input type="text" id="receptionLocation" class="form-input" placeholder="Ristorante La Collina">
+                            <button class="btn" onclick="saveLuoghiData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="luoghiSuccess3">Modifiche salvate con successo!</div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label class="form-label" for="receptionAddress">Indirizzo del ristorante</label>
+                            <input type="text" id="receptionAddress" class="form-input" placeholder="Via Roma, 15 - Milano">
+                            <button class="btn" onclick="saveLuoghiData()" style="margin-top: 10px;">Salva modifiche</button>
+                            <div class="success-message" id="luoghiSuccess4">Modifiche salvate con successo!</div>
                         </div>
                     </div>
                     
@@ -823,6 +861,12 @@
                 profileImagePreview.style.display = 'block';
             }
             
+            // Luoghi
+            document.getElementById('churchName').value = localStorage.getItem('churchName') || '';
+            document.getElementById('churchAddress').value = localStorage.getItem('churchAddress') || '';
+            document.getElementById('receptionLocation').value = localStorage.getItem('receptionLocation') || '';
+            document.getElementById('receptionAddress').value = localStorage.getItem('receptionAddress') || '';
+            
             // Countdown - Carica data e ora salvate
             const savedDate = localStorage.getItem('baptismEventDate');
             const savedTime = localStorage.getItem('baptismEventTime');
@@ -1013,6 +1057,29 @@
         }
         
         // ========== FINE NUOVE FUNZIONI RSVP ==========
+        
+        // Salva dati Luoghi
+        function saveLuoghiData() {
+            localStorage.setItem('churchName', document.getElementById('churchName').value);
+            localStorage.setItem('churchAddress', document.getElementById('churchAddress').value);
+            localStorage.setItem('receptionLocation', document.getElementById('receptionLocation').value);
+            localStorage.setItem('receptionAddress', document.getElementById('receptionAddress').value);
+            
+            // Mostra messaggio di successo
+            document.getElementById('luoghiSuccess1').style.display = 'block';
+            document.getElementById('luoghiSuccess2').style.display = 'block';
+            document.getElementById('luoghiSuccess3').style.display = 'block';
+            document.getElementById('luoghiSuccess4').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('luoghiSuccess1').style.display = 'none';
+                document.getElementById('luoghiSuccess2').style.display = 'none';
+                document.getElementById('luoghiSuccess3').style.display = 'none';
+                document.getElementById('luoghiSuccess4').style.display = 'none';
+            }, 3000);
+            
+            // Debug
+            debugSave('luoghi');
+        }
         
         // Salva dati Countdown
         function saveCountdownData() {

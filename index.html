@@ -1129,6 +1129,25 @@
             document.getElementById('profileImage').src = "/battesimo/img/profile.jpg";
         }
         
+        // Luoghi
+        const churchName = localStorage.getItem('churchName');
+        const churchAddress = localStorage.getItem('churchAddress');
+        const receptionLocation = localStorage.getItem('receptionLocation');
+        const receptionAddress = localStorage.getItem('receptionAddress');
+        
+        if (churchName) {
+            document.getElementById('churchName').textContent = churchName;
+        }
+        if (churchAddress) {
+            document.getElementById('churchAddress').textContent = churchAddress;
+        }
+        if (receptionLocation) {
+            document.getElementById('receptionLocation').textContent = receptionLocation;
+        }
+        if (receptionAddress) {
+            document.getElementById('receptionAddress').textContent = receptionAddress;
+        }
+        
         // Contatti
         const contactName1 = localStorage.getItem('contactName1');
         const contactName2 = localStorage.getItem('contactName2');
