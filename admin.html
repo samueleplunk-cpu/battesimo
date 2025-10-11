@@ -360,6 +360,22 @@
             box-shadow: var(--shadow);
         }
 
+        /* Configurazione Email */
+        .email-config-section {
+            background-color: rgba(212, 175, 55, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--color-gold);
+        }
+
+        .email-config-info {
+            font-size: 0.9rem;
+            color: var(--color-light-text);
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .admin-content {
@@ -576,6 +592,32 @@
                     <!-- NUOVA SEZIONE RSVP -->
                     <div class="admin-section" id="rsvpSection" style="display: none;">
                         <h2 class="section-title">Gestione RSVP</h2>
+                        
+                        <!-- Configurazione Email Notifiche -->
+                        <div class="email-config-section">
+                            <h3 style="color: var(--color-gold); margin-bottom: 15px;">Configurazione Notifiche Email</h3>
+                            
+                            <div class="form-section">
+                                <label class="form-label" for="adminEmail">Email per notifiche RSVP</label>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <input type="email" id="adminEmail" class="form-input" placeholder="tua.email@esempio.com" style="flex: 1;">
+                                    <button class="btn" onclick="saveAdminEmail()">
+                                        <i class="fas fa-save"></i> Salva Email
+                                    </button>
+                                </div>
+                                <div class="success-message" id="emailSuccess" style="display: none;">Email salvata con successo!</div>
+                            </div>
+                            
+                            <div class="email-config-info">
+                                <p><strong>Configurazione SMTP (Elastic Email):</strong></p>
+                                <p>Per ricevere le notifiche email, configura le credenziali SMTP nel file index.html:</p>
+                                <ul style="margin-left: 20px; margin-top: 5px;">
+                                    <li>Host: smtp.elasticemail.com</li>
+                                    <li>Username: La tua email Elastic Email</li>
+                                    <li>Password: La tua password Elastic Email</li>
+                                </ul>
+                            </div>
+                        </div>
                         
                         <div class="rsvp-actions">
                             <button class="btn btn-danger" onclick="resetAllRSVPs()">
@@ -830,8 +872,44 @@
         
         // ========== NUOVE FUNZIONI PER GESTIONE RSVP ==========
         
+        // Salva l'email dell'admin nel localStorage
+        function saveAdminEmail() {
+            const adminEmail = document.getElementById('adminEmail').value;
+            
+            if (adminEmail && isValidEmail(adminEmail)) {
+                localStorage.setItem('adminRSVPEmail', adminEmail);
+                
+                // Mostra messaggio di successo
+                document.getElementById('emailSuccess').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('emailSuccess').style.display = 'none';
+                }, 3000);
+                
+                console.log('Email admin salvata:', adminEmail);
+            } else {
+                alert('Inserisci un indirizzo email valido.');
+            }
+        }
+
+        // Validazione email
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Carica l'email salvata quando si apre la sezione RSVP
+        function loadAdminEmail() {
+            const savedEmail = localStorage.getItem('adminRSVPEmail');
+            if (savedEmail) {
+                document.getElementById('adminEmail').value = savedEmail;
+            }
+        }
+        
         // Carica e visualizza la lista RSVP
         function loadRSVPList() {
+            // Carica anche l'email dell'admin
+            loadAdminEmail();
+            
             const rsvpListContainer = document.getElementById('rsvpListContainer');
             const rsvps = JSON.parse(localStorage.getItem('baptismRSVPs')) || [];
             

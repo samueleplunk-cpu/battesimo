@@ -6,6 +6,8 @@
     <title>Battesimo - Invito</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- SMTPJS per l'invio email -->
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
     <style>
         :root {
             --color-white: #ffffff;
@@ -588,19 +590,6 @@
             color: var(--color-text);
         }
 
-        /* Footer */
-        footer {
-            background-color: var(--color-light-blue);
-            padding: 40px 0;
-            text-align: center;
-            color: var(--color-light-text);
-        }
-
-        .footer-text {
-            margin-top: 20px;
-            font-size: 0.9rem;
-        }
-
         /* MODIFICA: Nuova sezione Countdown con immagine di sfondo */
         #countdown-section {
             position: relative;
@@ -922,12 +911,12 @@
             <div class="rsvp-form fade-in">
                 <form id="rsvpForm">
                     <div class="form-group">
-                        <label class="form-label" for="guestName">Nome e Cognome</label>
+                        <label class="form-label" for="guestName">Nome e Cognome *</label>
                         <input type="text" id="guestName" class="form-input" required>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="guestEmail">Email</label>
+                        <label class="form-label" for="guestEmail">Email *</label>
                         <input type="email" id="guestEmail" class="form-input" required>
                     </div>
                     
@@ -937,7 +926,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="guestCount">Numero di partecipanti</label>
+                        <label class="form-label" for="guestCount">Numero di partecipanti *</label>
                         <select id="guestCount" class="form-select" required>
                             <option value="" disabled selected>Seleziona</option>
                             <option value="1">1 persona</option>
@@ -954,6 +943,9 @@
                     </div>
                     
                     <button type="submit" class="btn btn-block">Conferma Partecipazione</button>
+                    <p style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: var(--color-light-text);">
+                        Riceverai una notifica email di conferma
+                    </p>
                 </form>
             </div>
         </div>
@@ -1012,6 +1004,145 @@
     </footer>
 
     <script>
+    // ========== CONFIGURAZIONE SMTP ==========
+    // MODIFICA QUESTE CREDENZIALI CON I TUOI DATI ELASTIC EMAIL
+    const SMTP_CONFIG = {
+        Host: "smtp.elasticemail.com",
+        Username: "info@plunk.it", // Sostituisci con la tua email Elastic Email
+        Password: "ED0A55BF7ECE230650476637AEDF0B2C60A3", // Sostituisci con la tua password Elastic Email
+        From: "info@plunk.it" // Sostituisci con la tua email Elastic Email
+    };
+
+    // Funzione per inviare email di notifica RSVP con SMTPJS
+    function sendRSVPNotification(rsvpData) {
+        const adminEmail = localStorage.getItem('adminRSVPEmail');
+        
+        if (!adminEmail) {
+            console.log('Nessuna email admin configurata per le notifiche RSVP');
+            return;
+        }
+
+        // Prepara il contenuto dell'email
+        const emailContent = `
+Nuova conferma di partecipazione al battesimo!
+
+DETTAGLI CONFERMA:
+------------------
+Nome: ${rsvpData.name || 'Non specificato'}
+Email: ${rsvpData.email || 'Non specificato'}
+Telefono: ${rsvpData.phone || 'Non specificato'}
+Numero partecipanti: ${rsvpData.count || '1'} persona${rsvpData.count > 1 ? 'e' : ''}
+Messaggio: ${rsvpData.message || 'Nessun messaggio'}
+
+Data e ora conferma: ${new Date(rsvpData.timestamp).toLocaleString('it-IT')}
+
+------------------
+Questa notifica è stata generata automaticamente dal sistema RSVP.
+        `.trim();
+
+        // Configurazione per SMTPJS con Elastic Email
+        Email.send({
+            Host: SMTP_CONFIG.Host,
+            Username: SMTP_CONFIG.Username,
+            Password: SMTP_CONFIG.Password,
+            To: adminEmail,
+            From: SMTP_CONFIG.From,
+            Subject: "Nuova conferma di partecipazione al battesimo",
+            Body: emailContent
+        }).then(
+            message => {
+                console.log('Email inviata con successo:', message);
+            }
+        ).catch(
+            error => {
+                console.error('Errore nell\'invio email:', error);
+                // Fallback: salva in un log per invii successivi
+                queueFailedEmail(rsvpData);
+            }
+        );
+    }
+
+    // Coda per email fallite (in caso di problemi di connessione)
+    function queueFailedEmail(rsvpData) {
+        let failedEmails = JSON.parse(localStorage.getItem('failedRSVPEmails')) || [];
+        failedEmails.push({
+            data: rsvpData,
+            timestamp: new Date().toISOString(),
+            attempts: 1
+        });
+        localStorage.setItem('failedRSVPEmails', JSON.stringify(failedEmails));
+        console.log('Email aggiunta alla coda di ritento');
+    }
+
+    // Prova a reinviare le email fallite
+    function retryFailedEmails() {
+        const failedEmails = JSON.parse(localStorage.getItem('failedRSVPEmails')) || [];
+        if (failedEmails.length > 0) {
+            console.log(`Tentativo di reinvio di ${failedEmails.length} email fallite`);
+            
+            failedEmails.forEach((item, index) => {
+                if (item.attempts < 3) { // Massimo 3 tentativi
+                    setTimeout(() => {
+                        sendRSVPNotification(item.data);
+                        // Aggiorna il numero di tentativi
+                        item.attempts++;
+                        failedEmails[index] = item;
+                        localStorage.setItem('failedRSVPEmails', JSON.stringify(failedEmails));
+                    }, index * 2000); // Ritardo di 2 secondi tra un invio e l'altro
+                }
+            });
+        }
+    }
+
+    // Validazione email
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    // Gestione RSVP
+    document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const guestName = document.getElementById('guestName').value;
+        const guestEmail = document.getElementById('guestEmail').value;
+        const guestCount = document.getElementById('guestCount').value;
+        
+        // Validazione
+        if (!guestName || !guestEmail || !guestCount) {
+            alert('Per favore, compila tutti i campi obbligatori.');
+            return;
+        }
+        
+        if (!isValidEmail(guestEmail)) {
+            alert('Inserisci un indirizzo email valido.');
+            return;
+        }
+        
+        // Salvataggio dati
+        const rsvpData = {
+            name: guestName,
+            email: guestEmail,
+            phone: document.getElementById('guestPhone').value,
+            count: guestCount,
+            message: document.getElementById('guestMessage').value,
+            timestamp: new Date().toISOString()
+        };
+        
+        // Salva nel localStorage
+        let existingRSVPs = JSON.parse(localStorage.getItem('baptismRSVPs')) || [];
+        existingRSVPs.push(rsvpData);
+        localStorage.setItem('baptismRSVPs', JSON.stringify(existingRSVPs));
+        
+        // INVIA EMAIL DI NOTIFICA
+        sendRSVPNotification(rsvpData);
+        
+        alert('Grazie per la tua conferma! Ti aspettiamo al battesimo.\n\nRiceverai una notifica email di conferma.');
+        document.getElementById('rsvpForm').reset();
+    });
+
+    // ========== FUNZIONI ESISTENTI ==========
+    
     // Funzione per ottenere la data dell'evento dal localStorage
     function getEventDate() {
         const savedDate = localStorage.getItem('baptismEventDate');
@@ -1127,7 +1258,7 @@
             document.getElementById('godparentsName').textContent = godparentsName;
         }
         
-        // IMMAGINE PROFILO - CORREZIONE PRINCIPALE
+        // IMMAGINE PROFILO
         if (profileImage) {
             document.getElementById('profileImage').src = profileImage;
             console.log("Immagine profilo caricata:", profileImage);
@@ -1193,33 +1324,6 @@
         }
     }
     
-    // Gestione RSVP
-    document.getElementById('rsvpForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const guestName = document.getElementById('guestName').value;
-        const guestEmail = document.getElementById('guestEmail').value;
-        const guestCount = document.getElementById('guestCount').value;
-        
-        // Salvataggio dati (qui si può implementare il salvataggio su server)
-        const rsvpData = {
-            name: guestName,
-            email: guestEmail,
-            phone: document.getElementById('guestPhone').value,
-            count: guestCount,
-            message: document.getElementById('guestMessage').value,
-            timestamp: new Date().toISOString()
-        };
-        
-        // Salva nei localStorage
-        let existingRSVPs = JSON.parse(localStorage.getItem('baptismRSVPs')) || [];
-        existingRSVPs.push(rsvpData);
-        localStorage.setItem('baptismRSVPs', JSON.stringify(existingRSVPs));
-        
-        alert('Grazie per la tua conferma! Ti aspettiamo al battesimo.');
-        document.getElementById('rsvpForm').reset();
-    });
-    
     // Animazioni al caricamento
     window.onload = function() {
         // Animazioni al caricamento
@@ -1237,12 +1341,15 @@
         // Gestione menu attivo
         handleActiveMenu();
         
-        // CARICA I DATI DAL PANNELLO ADMIN - CHIAMATA PRINCIPALE
+        // CARICA I DATI DAL PANNELLO ADMIN
         loadAdminData();
         
         // Aggiorna i countdown
         updateCountdown();
         updateNewCountdown();
+        
+        // Prova a reinviare email fallite
+        retryFailedEmails();
     };
     
     // Aggiorna i countdown ogni secondo
