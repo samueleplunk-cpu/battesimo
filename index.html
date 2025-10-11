@@ -831,7 +831,7 @@
             <!-- Rettangolo Patrizia -->
             <div class="patrizia-container fade-in">
                 <div class="patrizia-image">
-                    <img src="/battesimo/img/profile.jpg" alt="Patrizia">
+                    <img id="profileImage" src="/battesimo/img/profile.jpg" alt="Patrizia">
                 </div>
                 <div class="patrizia-rectangle">
                     <div class="patrizia-name" id="patriziaName">Patrizia ♡</div>
@@ -1012,230 +1012,282 @@
     </footer>
 
     <script>
-        // Funzione per ottenere la data dell'evento dal localStorage
-        function getEventDate() {
-            const savedDate = localStorage.getItem('baptismEventDate');
-            const savedTime = localStorage.getItem('baptismEventTime');
-            
-            if (savedDate && savedTime) {
-                return new Date(`${savedDate}T${savedTime}`).getTime();
-            }
-            
-            // Data di fallback predefinita
-            return new Date('2023-06-10T11:00:00').getTime();
+    // Funzione per ottenere la data dell'evento dal localStorage
+    function getEventDate() {
+        const savedDate = localStorage.getItem('baptismEventDate');
+        const savedTime = localStorage.getItem('baptismEventTime');
+        
+        if (savedDate && savedTime) {
+            return new Date(`${savedDate}T${savedTime}`).getTime();
         }
         
-        // Countdown principale nell'header
-        function updateCountdown() {
-            const eventDate = getEventDate();
-            const now = new Date().getTime();
-            const distance = eventDate - now;
-            
-            if (distance < 0) {
-                // Rimuove il countdown invece di mostrare il messaggio
-                document.getElementById('countdown').style.display = 'none';
-                return;
-            }
-            
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-            document.getElementById('days').innerHTML = days.toString().padStart(2, '0');
-            document.getElementById('hours').innerHTML = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').innerHTML = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').innerHTML = seconds.toString().padStart(2, '0');
+        // Data di fallback predefinita
+        return new Date('2023-06-10T11:00:00').getTime();
+    }
+    
+    // Countdown principale nell'header
+    function updateCountdown() {
+        const eventDate = getEventDate();
+        const now = new Date().getTime();
+        const distance = eventDate - now;
+        
+        if (distance < 0) {
+            // Rimuove il countdown invece di mostrare il messaggio
+            document.getElementById('countdown').style.display = 'none';
+            return;
         }
         
-        // Nuovo countdown nella sezione dedicata
-        function updateNewCountdown() {
-            const eventDate = getEventDate();
-            const now = new Date().getTime();
-            const distance = eventDate - now;
-            
-            if (distance < 0) {
-                document.getElementById('newCountdown').innerHTML = "<h3>Il grande giorno è arrivato!</h3>";
-                return;
-            }
-            
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-            document.getElementById('newDays').innerHTML = days.toString().padStart(2, '0');
-            document.getElementById('newHours').innerHTML = hours.toString().padStart(2, '0');
-            document.getElementById('newMinutes').innerHTML = minutes.toString().padStart(2, '0');
-            document.getElementById('newSeconds').innerHTML = seconds.toString().padStart(2, '0');
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        document.getElementById('days').innerHTML = days.toString().padStart(2, '0');
+        document.getElementById('hours').innerHTML = hours.toString().padStart(2, '0');
+        document.getElementById('minutes').innerHTML = minutes.toString().padStart(2, '0');
+        document.getElementById('seconds').innerHTML = seconds.toString().padStart(2, '0');
+    }
+    
+    // Nuovo countdown nella sezione dedicata
+    function updateNewCountdown() {
+        const eventDate = getEventDate();
+        const now = new Date().getTime();
+        const distance = eventDate - now;
+        
+        if (distance < 0) {
+            document.getElementById('newCountdown').innerHTML = "<h3>Il grande giorno è arrivato!</h3>";
+            return;
         }
         
-        // Aggiorna i countdown ogni secondo
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
         
-        setInterval(updateNewCountdown, 1000);
-        updateNewCountdown();
+        document.getElementById('newDays').innerHTML = days.toString().padStart(2, '0');
+        document.getElementById('newHours').innerHTML = hours.toString().padStart(2, '0');
+        document.getElementById('newMinutes').innerHTML = minutes.toString().padStart(2, '0');
+        document.getElementById('newSeconds').innerHTML = seconds.toString().padStart(2, '0');
+    }
+    
+    // Carica i dati dal localStorage e aggiorna la pagina
+    function loadAdminData() {
+        console.log("Caricamento dati admin...");
         
-        // Gestione RSVP
-        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const guestName = document.getElementById('guestName').value;
-            const guestEmail = document.getElementById('guestEmail').value;
-            const guestCount = document.getElementById('guestCount').value;
-            
-            // Salvataggio dati (qui si può implementare il salvataggio su server)
-            const rsvpData = {
-                name: guestName,
-                email: guestEmail,
-                phone: document.getElementById('guestPhone').value,
-                count: guestCount,
-                message: document.getElementById('guestMessage').value,
-                timestamp: new Date().toISOString()
+        // Home
+        const babyName = localStorage.getItem('babyName');
+        const babyDetails = localStorage.getItem('babyDetails');
+        
+        if (babyName) {
+            document.getElementById('babyName').textContent = babyName;
+            console.log("Baby name caricato:", babyName);
+        }
+        if (babyDetails) {
+            document.getElementById('babyDetails').textContent = babyDetails;
+            console.log("Baby details caricati:", babyDetails);
+        }
+        
+        // Invito
+        const invitoText1 = localStorage.getItem('invitoText1');
+        const invitoText2 = localStorage.getItem('invitoText2');
+        const invitoText3 = localStorage.getItem('invitoText3');
+        const invitoImage = localStorage.getItem('invitoImage');
+        
+        if (invitoText1) {
+            document.getElementById('invitoText1').textContent = invitoText1;
+        }
+        if (invitoText2) {
+            document.getElementById('invitoText2').textContent = invitoText2;
+        }
+        if (invitoText3) {
+            document.getElementById('invitoText3').textContent = invitoText3;
+        }
+        if (invitoImage) {
+            document.getElementById('invitoImage').src = invitoImage;
+            console.log("Immagine invito caricata");
+        }
+        
+        // Famiglia
+        const patriziaName = localStorage.getItem('patriziaName');
+        const patriziaMessage = localStorage.getItem('patriziaMessage');
+        const parentsName = localStorage.getItem('parentsName');
+        const godparentsName = localStorage.getItem('godparentsName');
+        const profileImage = localStorage.getItem('profileImage');
+        
+        if (patriziaName) {
+            document.getElementById('patriziaName').textContent = patriziaName;
+        }
+        if (patriziaMessage) {
+            document.getElementById('patriziaMessage').textContent = patriziaMessage;
+        }
+        if (parentsName) {
+            document.getElementById('parentsName').textContent = parentsName;
+        }
+        if (godparentsName) {
+            document.getElementById('godparentsName').textContent = godparentsName;
+        }
+        
+        // IMMAGINE PROFILO - CORREZIONE PRINCIPALE
+        if (profileImage) {
+            document.getElementById('profileImage').src = profileImage;
+            console.log("Immagine profilo caricata:", profileImage);
+        } else {
+            // Fallback all'immagine predefinita
+            document.getElementById('profileImage').src = "/battesimo/img/profile.jpg";
+        }
+        
+        // Contatti
+        const contactName1 = localStorage.getItem('contactName1');
+        const contactName2 = localStorage.getItem('contactName2');
+        const contactPhone1 = localStorage.getItem('contactPhone1');
+        const contactPhone2 = localStorage.getItem('contactPhone2');
+        
+        if (contactName1) {
+            document.getElementById('contactName1').textContent = contactName1;
+        }
+        if (contactName2) {
+            document.getElementById('contactName2').textContent = contactName2;
+        }
+        if (contactPhone1) {
+            document.getElementById('contactPhone1').textContent = contactPhone1;
+        }
+        if (contactPhone2) {
+            document.getElementById('contactPhone2').textContent = contactPhone2;
+        }
+        
+        // Footer
+        const footerText = localStorage.getItem('footerText');
+        if (footerText) {
+            document.getElementById('footerText').textContent = footerText;
+        }
+        
+        // Countdown - aggiorna data e ora della cerimonia
+        updateCeremonyDetails();
+        
+        console.log("Caricamento dati admin completato");
+    }
+    
+    // Aggiorna i dettagli della cerimonia in base alla data salvata
+    function updateCeremonyDetails() {
+        const savedDate = localStorage.getItem('baptismEventDate');
+        const savedTime = localStorage.getItem('baptismEventTime');
+        
+        if (savedDate && savedTime) {
+            const eventDate = new Date(`${savedDate}T${savedTime}`);
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric'
+            };
+            const timeOptions = {
+                hour: '2-digit',
+                minute: '2-digit'
             };
             
-            // Salva nei localStorage
-            let existingRSVPs = JSON.parse(localStorage.getItem('baptismRSVPs')) || [];
-            existingRSVPs.push(rsvpData);
-            localStorage.setItem('baptismRSVPs', JSON.stringify(existingRSVPs));
+            const formattedDate = eventDate.toLocaleDateString('it-IT', options);
+            const formattedTime = eventDate.toLocaleTimeString('it-IT', timeOptions);
             
-            alert('Grazie per la tua conferma! Ti aspettiamo al battesimo.');
-            document.getElementById('rsvpForm').reset();
-        });
-        
-        // Carica i dati dal localStorage e aggiorna la pagina
-        function loadAdminData() {
-            // Home
-            if (localStorage.getItem('babyName')) {
-                document.getElementById('babyName').textContent = localStorage.getItem('babyName');
-            }
-            if (localStorage.getItem('babyDetails')) {
-                document.getElementById('babyDetails').textContent = localStorage.getItem('babyDetails');
-            }
-            
-            // Invito
-            if (localStorage.getItem('invitoText1')) {
-                document.getElementById('invitoText1').textContent = localStorage.getItem('invitoText1');
-            }
-            if (localStorage.getItem('invitoText2')) {
-                document.getElementById('invitoText2').textContent = localStorage.getItem('invitoText2');
-            }
-            if (localStorage.getItem('invitoText3')) {
-                document.getElementById('invitoText3').textContent = localStorage.getItem('invitoText3');
-            }
-            if (localStorage.getItem('invitoImage')) {
-                document.getElementById('invitoImage').src = localStorage.getItem('invitoImage');
-            }
-            
-            // Famiglia
-            if (localStorage.getItem('patriziaName')) {
-                document.getElementById('patriziaName').textContent = localStorage.getItem('patriziaName');
-            }
-            if (localStorage.getItem('patriziaMessage')) {
-                document.getElementById('patriziaMessage').textContent = localStorage.getItem('patriziaMessage');
-            }
-            if (localStorage.getItem('parentsName')) {
-                document.getElementById('parentsName').textContent = localStorage.getItem('parentsName');
-            }
-            if (localStorage.getItem('godparentsName')) {
-                document.getElementById('godparentsName').textContent = localStorage.getItem('godparentsName');
-            }
-            
-            // Contatti
-            if (localStorage.getItem('contactName1')) {
-                document.getElementById('contactName1').textContent = localStorage.getItem('contactName1');
-            }
-            if (localStorage.getItem('contactName2')) {
-                document.getElementById('contactName2').textContent = localStorage.getItem('contactName2');
-            }
-            if (localStorage.getItem('contactPhone1')) {
-                document.getElementById('contactPhone1').textContent = localStorage.getItem('contactPhone1');
-            }
-            if (localStorage.getItem('contactPhone2')) {
-                document.getElementById('contactPhone2').textContent = localStorage.getItem('contactPhone2');
-            }
-            
-            // Footer
-            if (localStorage.getItem('footerText')) {
-                document.getElementById('footerText').textContent = localStorage.getItem('footerText');
-            }
+            document.getElementById('ceremonyDate').textContent = formattedDate;
+            document.getElementById('ceremonyTime').textContent = `Ore ${formattedTime}`;
         }
+    }
+    
+    // Gestione RSVP
+    document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+        e.preventDefault();
         
-        // Animazioni al caricamento
-        window.onload = function() {
-            // Animazioni al caricamento
-            const fadeElements = document.querySelectorAll('.fade-in');
-            fadeElements.forEach((el, index) => {
-                setTimeout(() => {
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0)';
-                }, index * 200);
-            });
-            
-            // Crea stelle decorative
-            createStars();
-            
-            // Gestione menu attivo
-            handleActiveMenu();
-            
-            // Carica dati dal pannello admin
-            loadAdminData();
+        const guestName = document.getElementById('guestName').value;
+        const guestEmail = document.getElementById('guestEmail').value;
+        const guestCount = document.getElementById('guestCount').value;
+        
+        // Salvataggio dati (qui si può implementare il salvataggio su server)
+        const rsvpData = {
+            name: guestName,
+            email: guestEmail,
+            phone: document.getElementById('guestPhone').value,
+            count: guestCount,
+            message: document.getElementById('guestMessage').value,
+            timestamp: new Date().toISOString()
         };
         
+        // Salva nei localStorage
+        let existingRSVPs = JSON.parse(localStorage.getItem('baptismRSVPs')) || [];
+        existingRSVPs.push(rsvpData);
+        localStorage.setItem('baptismRSVPs', JSON.stringify(existingRSVPs));
+        
+        alert('Grazie per la tua conferma! Ti aspettiamo al battesimo.');
+        document.getElementById('rsvpForm').reset();
+    });
+    
+    // Animazioni al caricamento
+    window.onload = function() {
+        // Animazioni al caricamento
+        const fadeElements = document.querySelectorAll('.fade-in');
+        fadeElements.forEach((el, index) => {
+            setTimeout(() => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }, index * 200);
+        });
+        
         // Crea stelle decorative
-        function createStars() {
-            const header = document.querySelector('header');
-            for (let i = 0; i < 15; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.width = Math.random() * 5 + 2 + 'px';
-                star.style.height = star.style.width;
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 3 + 's';
-                header.appendChild(star);
-            }
-        }
+        createStars();
         
-        // Gestione menu attivo durante lo scroll
-        function handleActiveMenu() {
-            const sections = document.querySelectorAll('section, header');
-            const menuItems = document.querySelectorAll('.menu-item');
+        // Gestione menu attivo
+        handleActiveMenu();
+        
+        // CARICA I DATI DAL PANNELLO ADMIN - CHIAMATA PRINCIPALE
+        loadAdminData();
+        
+        // Aggiorna i countdown
+        updateCountdown();
+        updateNewCountdown();
+    };
+    
+    // Aggiorna i countdown ogni secondo
+    setInterval(updateCountdown, 1000);
+    setInterval(updateNewCountdown, 1000);
+    
+    // Crea stelle decorative
+    function createStars() {
+        const header = document.querySelector('header');
+        for (let i = 0; i < 15; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = Math.random() * 5 + 2 + 'px';
+            star.style.height = star.style.width;
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            header.appendChild(star);
+        }
+    }
+    
+    // Gestione menu attivo durante lo scroll
+    function handleActiveMenu() {
+        const sections = document.querySelectorAll('section, header');
+        const menuItems = document.querySelectorAll('.menu-item');
+        
+        window.addEventListener('scroll', function() {
+            let current = '';
             
-            window.addEventListener('scroll', function() {
-                let current = '';
-                
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    const sectionHeight = section.clientHeight;
-                    if (scrollY >= (sectionTop - 200)) {
-                        current = section.getAttribute('id');
-                    }
-                });
-                
-                menuItems.forEach(item => {
-                    item.classList.remove('active');
-                    if (item.getAttribute('href').substring(1) === current) {
-                        item.classList.add('active');
-                    }
-                });
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
             });
-        }
-        
-        // Personalizzazione dati (questi possono essere modificati)
-        document.getElementById('babyName').textContent = 'Emma Rossi';
-        document.getElementById('babyDetails').textContent = 'Nata il 15 Marzo 2023';
-        document.getElementById('ceremonyDate').textContent = 'Sabato, 10 Giugno 2023';
-        document.getElementById('ceremonyTime').textContent = 'Ore 11:00';
-        document.getElementById('churchName').textContent = 'Chiesa di Santa Maria';
-        document.getElementById('churchAddress').textContent = 'Piazza del Duomo, 1 - Milano';
-        document.getElementById('receptionLocation').textContent = 'Ristorante La Collina';
-        document.getElementById('receptionAddress').textContent = 'Via Roma, 15 - Milano';
-        document.getElementById('parentsName').textContent = 'Marco e Laura Rossi';
-        document.getElementById('godparentsName').textContent = 'Alessandro e Giulia Bianchi';
-        document.getElementById('contactPhone1').textContent = '+39 123 456 7890';
-        document.getElementById('contactPhone2').textContent = '+39 098 765 4321';
-    </script>
+            
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').substring(1) === current) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    }
+</script>
 </body>
 </html>

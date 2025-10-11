@@ -267,6 +267,15 @@
             display: none;
         }
 
+        .profile-image-preview {
+            max-width: 150px;
+            max-height: 150px;
+            margin-top: 10px;
+            border-radius: 50%;
+            border: 3px solid var(--color-gold);
+            display: none;
+        }
+
         .dimension-info {
             font-size: 0.8rem;
             color: var(--color-light-text);
@@ -421,6 +430,16 @@
                     <div class="admin-section" id="famigliaSection" style="display: none;">
                         <h2 class="section-title">Famiglia</h2>
                         
+                        <!-- NUOVO CAMPO: Immagine Profilo -->
+                        <div class="form-section">
+                            <label class="form-label" for="profileImage">Immagine Profilo</label>
+                            <input type="file" id="profileImage" class="form-input" accept="image/*">
+                            <p class="dimension-info">L'immagine verrà utilizzata come foto profilo nella sezione famiglia. Dimensioni consigliate: 200x200px (verrà ritagliata in formato circolare)</p>
+                            <img id="profileImagePreview" class="profile-image-preview" src="" alt="Anteprima immagine profilo">
+                            <button class="btn" onclick="saveProfileImage()" style="margin-top: 10px;">Salva immagine profilo</button>
+                            <div class="success-message" id="profileImageSuccess">Immagine profilo salvata con successo!</div>
+                        </div>
+                        
                         <div class="form-section">
                             <label class="form-label" for="patriziaName">Nome nella sezione rettangolo</label>
                             <input type="text" id="patriziaName" class="form-input" placeholder="Patrizia ♡">
@@ -541,6 +560,8 @@
         const adminSections = document.querySelectorAll('.admin-section');
         const invitoImageInput = document.getElementById('invitoImage');
         const invitoImagePreview = document.getElementById('invitoImagePreview');
+        const profileImageInput = document.getElementById('profileImage');
+        const profileImagePreview = document.getElementById('profileImagePreview');
         
         // Gestione del login
         loginForm.addEventListener('submit', function(e) {
@@ -587,7 +608,7 @@
             loginError.textContent = '';
         }
         
-        // Gestione anteprima immagine
+        // Gestione anteprima immagine invito
         invitoImageInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -600,54 +621,87 @@
             }
         });
         
-        // Carica dati dal localStorage
-        function loadAdminData() {
-            // Home
-            document.getElementById('babyName').value = localStorage.getItem('babyName') || 'Emma Rossi';
-            document.getElementById('babyDetails').value = localStorage.getItem('babyDetails') || 'Nata il 15 Marzo 2023';
-            
-            // Invito
-            document.getElementById('invitoText1').value = localStorage.getItem('invitoText1') || 'Mamma e papà mi hanno preparato una festa indimenticabile e sarebbe un piacere immenso poter essere insieme in questo giorno.';
-            document.getElementById('invitoText2').value = localStorage.getItem('invitoText2') || 'Abbiamo sentito dire che verranno fate, draghi, principi e principesse, folletti e unicorni. O forse è solo frutto della mia immaginazione :)';
-            document.getElementById('invitoText3').value = localStorage.getItem('invitoText3') || 'In ogni caso, questa è la mia prima festa e ti aspetto con affetto!';
-            
-            // Carica anteprima immagine se presente
-            const savedImage = localStorage.getItem('invitoImage');
-            if (savedImage) {
-                invitoImagePreview.src = savedImage;
-                invitoImagePreview.style.display = 'block';
+        // Gestione anteprima immagine profilo
+        profileImageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profileImagePreview.src = e.target.result;
+                    profileImagePreview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
             }
-            
-            // Famiglia
-            document.getElementById('patriziaName').value = localStorage.getItem('patriziaName') || 'Patrizia ♡';
-            document.getElementById('patriziaMessage').value = localStorage.getItem('patriziaMessage') || 'Se sei arrivato qui, significa che teniamo molto a te e saremmo felici se fossi con noi in un giorno così speciale!';
-            document.getElementById('parentsName').value = localStorage.getItem('parentsName') || 'Marco e Laura Rossi';
-            document.getElementById('godparentsName').value = localStorage.getItem('godparentsName') || 'Alessandro e Giulia Bianchi';
-            
-            // Countdown - Carica data e ora salvate
-            const savedDate = localStorage.getItem('baptismEventDate');
-            const savedTime = localStorage.getItem('baptismEventTime');
-            
-            if (savedDate) {
-                document.getElementById('eventDate').value = savedDate;
-            }
-            
-            if (savedTime) {
-                document.getElementById('eventTime').value = savedTime;
-            }
-            
-            // Aggiorna la visualizzazione della data corrente
-            updateCurrentDateDisplay();
-            
-            // Contatti
-            document.getElementById('contactName1').value = localStorage.getItem('contactName1') || 'Mamma Laura';
-            document.getElementById('contactName2').value = localStorage.getItem('contactName2') || 'Papà Marco';
-            document.getElementById('contactPhone1').value = localStorage.getItem('contactPhone1') || '+39 123 456 7890';
-            document.getElementById('contactPhone2').value = localStorage.getItem('contactPhone2') || '+39 098 765 4321';
-            
-            // Footer
-            document.getElementById('footerText').value = localStorage.getItem('footerText') || 'Con affetto, la famiglia Rossi';
+        });
+        
+        // Funzione di debug per verificare il salvataggio
+        function debugSave(section) {
+            console.log(`Salvataggio sezione: ${section}`);
+            console.log('Contenuto localStorage:', {
+                babyName: localStorage.getItem('babyName'),
+                babyDetails: localStorage.getItem('babyDetails'),
+                profileImage: localStorage.getItem('profileImage') ? 'PRESENTE' : 'ASSENTE',
+                patriziaName: localStorage.getItem('patriziaName'),
+                parentsName: localStorage.getItem('parentsName'),
+                godparentsName: localStorage.getItem('godparentsName')
+            });
         }
+        
+        // Carica dati dal localStorage
+function loadAdminData() {
+    // Home
+    document.getElementById('babyName').value = localStorage.getItem('babyName') || '';
+    document.getElementById('babyDetails').value = localStorage.getItem('babyDetails') || '';
+    
+    // Invito
+    document.getElementById('invitoText1').value = localStorage.getItem('invitoText1') || '';
+    document.getElementById('invitoText2').value = localStorage.getItem('invitoText2') || '';
+    document.getElementById('invitoText3').value = localStorage.getItem('invitoText3') || '';
+    
+    // Carica anteprima immagine se presente
+    const savedImage = localStorage.getItem('invitoImage');
+    if (savedImage) {
+        invitoImagePreview.src = savedImage;
+        invitoImagePreview.style.display = 'block';
+    }
+    
+    // Famiglia
+    document.getElementById('patriziaName').value = localStorage.getItem('patriziaName') || '';
+    document.getElementById('patriziaMessage').value = localStorage.getItem('patriziaMessage') || '';
+    document.getElementById('parentsName').value = localStorage.getItem('parentsName') || '';
+    document.getElementById('godparentsName').value = localStorage.getItem('godparentsName') || '';
+    
+    // Carica anteprima immagine profilo se presente
+    const savedProfileImage = localStorage.getItem('profileImage');
+    if (savedProfileImage) {
+        profileImagePreview.src = savedProfileImage;
+        profileImagePreview.style.display = 'block';
+    }
+    
+    // Countdown - Carica data e ora salvate
+    const savedDate = localStorage.getItem('baptismEventDate');
+    const savedTime = localStorage.getItem('baptismEventTime');
+    
+    if (savedDate) {
+        document.getElementById('eventDate').value = savedDate;
+    }
+    
+    if (savedTime) {
+        document.getElementById('eventTime').value = savedTime;
+    }
+    
+    // Aggiorna la visualizzazione della data corrente
+    updateCurrentDateDisplay();
+    
+    // Contatti
+    document.getElementById('contactName1').value = localStorage.getItem('contactName1') || '';
+    document.getElementById('contactName2').value = localStorage.getItem('contactName2') || '';
+    document.getElementById('contactPhone1').value = localStorage.getItem('contactPhone1') || '';
+    document.getElementById('contactPhone2').value = localStorage.getItem('contactPhone2') || '';
+    
+    // Footer
+    document.getElementById('footerText').value = localStorage.getItem('footerText') || '';
+}
         
         // Aggiorna la visualizzazione della data corrente
         function updateCurrentDateDisplay() {
@@ -701,6 +755,9 @@
             setTimeout(() => {
                 document.getElementById('countdownSuccess').style.display = 'none';
             }, 3000);
+            
+            // Debug
+            debugSave('countdown');
         }
         
         // Salva dati Home
@@ -715,6 +772,9 @@
                 document.getElementById('homeSuccess').style.display = 'none';
                 document.getElementById('homeSuccess2').style.display = 'none';
             }, 3000);
+            
+            // Debug
+            debugSave('home');
         }
         
         // Salva dati Invito
@@ -732,6 +792,9 @@
                 document.getElementById('invitoSuccess2').style.display = 'none';
                 document.getElementById('invitoSuccess3').style.display = 'none';
             }, 3000);
+            
+            // Debug
+            debugSave('invito');
         }
         
         // Salva immagine Invito
@@ -747,6 +810,34 @@
                     setTimeout(() => {
                         document.getElementById('invitoSuccess4').style.display = 'none';
                     }, 3000);
+                    
+                    // Debug
+                    debugSave('invitoImage');
+                }
+                reader.readAsDataURL(file);
+            } else {
+                alert('Seleziona un\'immagine prima di salvare.');
+            }
+        }
+        
+        // NUOVA FUNZIONE: Salva immagine Profilo
+        function saveProfileImage() {
+            const file = profileImageInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageData = e.target.result;
+                    localStorage.setItem('profileImage', imageData);
+                    console.log("Immagine profilo salvata nel localStorage");
+                    
+                    // Mostra messaggio di successo
+                    document.getElementById('profileImageSuccess').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('profileImageSuccess').style.display = 'none';
+                    }, 3000);
+                    
+                    // Debug
+                    debugSave('profileImage');
                 }
                 reader.readAsDataURL(file);
             } else {
@@ -772,6 +863,9 @@
                 document.getElementById('famigliaSuccess3').style.display = 'none';
                 document.getElementById('famigliaSuccess4').style.display = 'none';
             }, 3000);
+            
+            // Debug
+            debugSave('famiglia');
         }
         
         // Salva dati Contatti
@@ -792,6 +886,9 @@
                 document.getElementById('contattiSuccess3').style.display = 'none';
                 document.getElementById('contattiSuccess4').style.display = 'none';
             }, 3000);
+            
+            // Debug
+            debugSave('contatti');
         }
         
         // Salva dati Footer
@@ -803,6 +900,9 @@
             setTimeout(() => {
                 document.getElementById('footerSuccess').style.display = 'none';
             }, 3000);
+            
+            // Debug
+            debugSave('footer');
         }
     </script>
 </body>
