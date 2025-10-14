@@ -41,17 +41,56 @@ function formatFileSize($bytes) {
     }
 }
 
+function getDefaultImages() {
+    $defaultImages = [];
+    $defaultDir = 'assets/images/default-gallery';
+    
+    // Crea la directory se non esiste
+    if (!is_dir($defaultDir)) {
+        mkdir($defaultDir, 0755, true);
+    }
+    
+    // Array delle 4 immagini default
+    $defaultFiles = ['default1.jpg', 'default2.jpg', 'default3.jpg', 'default4.jpg'];
+    
+    foreach ($defaultFiles as $defaultFile) {
+        $filePath = $defaultDir . '/' . $defaultFile;
+        if (file_exists($filePath)) {
+            $defaultImages[] = [
+                'name' => $defaultFile,
+                'size' => formatFileSize(filesize($filePath)),
+                'date' => date('d/m/Y H:i', filemtime($filePath)),
+                'fullPath' => $filePath,
+                'thumbnail' => $filePath,
+                'isDefault' => true
+            ];
+        }
+    }
+    
+    return $defaultImages;
+}
+
 $galleryDir = 'uploads/gallery';
 $response = ['success' => false];
 
 try {
-    // Crea la directory se non esiste
+    // Crea le directory se non esistono
     if (!is_dir($galleryDir)) {
         mkdir($galleryDir, 0755, true);
     }
     
+    $defaultDir = 'assets/images/default-gallery';
+    if (!is_dir($defaultDir)) {
+        mkdir($defaultDir, 0755, true);
+    }
+    
     $photos = [];
     
+    // Aggiungi immagini default
+    $defaultImages = getDefaultImages();
+    $photos = array_merge($photos, $defaultImages);
+    
+    // Aggiungi immagini caricate dagli utenti
     if (is_dir($galleryDir)) {
         $files = scandir($galleryDir);
         
@@ -71,24 +110,26 @@ try {
                             'size' => formatFileSize($fileSize),
                             'date' => date('d/m/Y H:i', $fileTime),
                             'fullPath' => $filePath,
-                            'thumbnail' => $filePath // Per semplicità usiamo la stessa immagine
+                            'thumbnail' => $filePath,
+                            'isDefault' => false
                         ];
                     }
                 }
             }
         }
-        
-        // Ordina per data (più recenti prima)
-        usort($photos, function($a, $b) {
-            return filemtime($b['fullPath']) - filemtime($a['fullPath']);
-        });
-        
-        $response['success'] = true;
-        $response['photos'] = $photos;
-        $response['stats'] = getGalleryStats($galleryDir);
-    } else {
-        $response['error'] = 'Directory galleria non trovata';
     }
+    
+    // Ordina per data (più recenti prima)
+    usort($photos, function($a, $b) {
+        $timeA = $a['isDefault'] ? 0 : filemtime($a['fullPath']);
+        $timeB = $b['isDefault'] ? 0 : filemtime($b['fullPath']);
+        return $timeB - $timeA;
+    });
+    
+    $response['success'] = true;
+    $response['photos'] = $photos;
+    $response['stats'] = getGalleryStats($galleryDir);
+    
 } catch (Exception $e) {
     $response['error'] = 'Errore nel caricamento della galleria: ' . $e->getMessage();
 }

@@ -793,56 +793,106 @@
                     </div>
 
                     <!-- NUOVA SEZIONE GALLERIA -->
-                    <div class="admin-section" id="galleriaSection" style="display: none;">
-                        <h2 class="section-title">Gestione Galleria</h2>
-                        
-                        <!-- Statistiche -->
-                        <div class="gallery-stats" style="background-color: rgba(212, 175, 55, 0.1); padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid var(--color-gold);">
-                            <h3 style="color: var(--color-gold); margin-bottom: 15px;">Statistiche Galleria</h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                                <div class="stat-item">
-                                    <strong>Foto totali:</strong> <span id="totalPhotos">0</span>
-                                </div>
-                                <div class="stat-item">
-                                    <strong>Spazio occupato:</strong> <span id="totalSize">0 MB</span>
-                                </div>
-                                <div class="stat-item">
-                                    <strong>Ultimo aggiornamento:</strong> <span id="lastUpdate">-</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Pulsanti Azione -->
-                        <div class="gallery-actions" style="display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;">
-                            <button class="btn" onclick="openUploadModal()">
-                                <i class="fas fa-upload"></i> Carica Foto
-                            </button>
-                            <button class="btn" onclick="refreshGallery()">
-                                <i class="fas fa-sync-alt"></i> Aggiorna
-                            </button>
-                            <div style="display: flex; gap: 10px; align-items: center; margin-left: auto;">
-                                <input type="date" id="filterDate" class="form-input" style="width: auto;">
-                                <input type="text" id="searchFile" class="form-input" placeholder="Cerca per nome..." style="width: 200px;">
-                                <button class="btn" onclick="applyFilters()">
-                                    <i class="fas fa-search"></i> Applica
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Grid Foto -->
-                        <div id="galleryGrid" class="gallery-grid">
-                            <!-- Le foto verranno caricate dinamicamente qui -->
-                        </div>
-                        
-                        <!-- Messaggio nessuna foto -->
-                        <div id="noPhotosMessage" class="no-rsvp" style="display: none;">
-                            <i class="fas fa-images" style="font-size: 3rem; margin-bottom: 15px; color: rgba(212, 175, 55, 0.3);"></i>
-                            <p>Nessuna foto nella galleria</p>
-                            <button class="btn" onclick="openUploadModal()" style="margin-top: 15px;">
-                                <i class="fas fa-upload"></i> Carica la prima foto
-                            </button>
-                        </div>
-                    </div>
+<div class="admin-section" id="galleriaSection" style="display: none;">
+    <h2 class="section-title">Gestione Galleria</h2>
+    
+    <!-- Gestione Immagini Default -->
+    <div class="default-gallery-section" style="background-color: rgba(212, 175, 55, 0.1); padding: 25px; border-radius: 10px; margin-bottom: 30px; border-left: 4px solid var(--color-gold);">
+        <h3 style="color: var(--color-gold); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-star"></i>
+            <span>Immagini Default</span>
+            <span class="badge" style="background-color: var(--color-gold); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem;">4 immagini</span>
+        </h3>
+        
+        <div class="default-images-info" style="margin-bottom: 20px;">
+            <p style="color: var(--color-light-text); font-size: 0.9rem;">
+                Le immagini default sono visualizzate nella galleria del frontend. Puoi eliminarle e sostituirle con nuove immagini.
+            </p>
+        </div>
+        
+        <div id="defaultGalleryGrid" class="gallery-grid">
+            <!-- Le immagini default verranno caricate dinamicamente qui -->
+        </div>
+        
+        <!-- Upload nuova immagine default -->
+        <div class="upload-default-section" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(212, 175, 55, 0.3);">
+            <h4 style="color: var(--color-text); margin-bottom: 15px;">Sostituisci Immagine Default</h4>
+            <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
+                <div style="flex: 1;">
+                    <label class="form-label" for="defaultImageSelect">Seleziona immagine da sostituire</label>
+                    <select id="defaultImageSelect" class="form-select" style="width: 100%;">
+                        <option value="">Seleziona un'immagine default</option>
+                    </select>
+                </div>
+                <div style="flex: 1;">
+                    <label class="form-label" for="newDefaultImage">Nuova immagine</label>
+                    <input type="file" id="newDefaultImage" class="form-input" accept="image/jpeg,image/jpg,image/png,image/gif">
+                </div>
+                <button class="btn" onclick="replaceDefaultImage()" style="flex-shrink: 0;">
+                    <i class="fas fa-sync-alt"></i> Sostituisci
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistiche -->
+    <div class="gallery-stats" style="background-color: rgba(212, 175, 55, 0.1); padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid var(--color-gold);">
+        <h3 style="color: var(--color-gold); margin-bottom: 15px;">Statistiche Galleria</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div class="stat-item">
+                <strong>Foto totali:</strong> <span id="totalPhotos">0</span>
+            </div>
+            <div class="stat-item">
+                <strong>Immagini default:</strong> <span id="defaultPhotos">4</span>
+            </div>
+            <div class="stat-item">
+                <strong>Upload utenti:</strong> <span id="userPhotos">0</span>
+            </div>
+            <div class="stat-item">
+                <strong>Spazio occupato:</strong> <span id="totalSize">0 MB</span>
+            </div>
+            <div class="stat-item">
+                <strong>Ultimo aggiornamento:</strong> <span id="lastUpdate">-</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pulsanti Azione -->
+    <div class="gallery-actions" style="display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;">
+        <button class="btn" onclick="openUploadModal()">
+            <i class="fas fa-upload"></i> Carica Foto
+        </button>
+        <button class="btn" onclick="refreshGallery()">
+            <i class="fas fa-sync-alt"></i> Aggiorna
+        </button>
+        <div style="display: flex; gap: 10px; align-items: center; margin-left: auto;">
+            <input type="date" id="filterDate" class="form-input" style="width: auto;">
+            <input type="text" id="searchFile" class="form-input" placeholder="Cerca per nome..." style="width: 200px;">
+            <button class="btn" onclick="applyFilters()">
+                <i class="fas fa-search"></i> Applica
+            </button>
+        </div>
+    </div>
+    
+    <!-- Grid Foto Utenti -->
+    <h3 style="color: var(--color-gold); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-users"></i>
+        <span>Foto Caricate dagli Utenti</span>
+    </h3>
+    
+    <div id="galleryGrid" class="gallery-grid">
+        <!-- Le foto verranno caricate dinamicamente qui -->
+    </div>
+    
+    <!-- Messaggio nessuna foto -->
+    <div id="noPhotosMessage" class="no-rsvp" style="display: none;">
+        <i class="fas fa-images" style="font-size: 3rem; margin-bottom: 15px; color: rgba(212, 175, 55, 0.3);"></i>
+        <p>Nessuna foto nella galleria</p>
+        <button class="btn" onclick="openUploadModal()" style="margin-top: 15px;">
+            <i class="fas fa-upload"></i> Carica la prima foto
+        </button>
+    </div>
+</div>
                     
                     <!-- Contatti Section -->
                     <div class="admin-section" id="contattiSection" style="display: none;">
@@ -1031,6 +1081,7 @@
                 // Se è la sezione Galleria, carica la galleria
                 if (this.getAttribute('data-section') === 'galleria') {
                     loadGallery();
+					loadDefaultImages();
                 }
             });
         });
@@ -1583,6 +1634,227 @@
         }
         
         // ========== FINE FUNZIONI RSVP ==========
+		
+		// ========== FUNZIONI PER GESTIONE IMMAGINI DEFAULT ==========
+
+// Carica le immagini default
+function loadDefaultImages() {
+    fetch('get_gallery.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const defaultImages = data.photos.filter(photo => photo.isDefault);
+                displayDefaultImages(defaultImages);
+                populateDefaultImageSelect(defaultImages);
+                updateStats(data);
+            }
+        })
+        .catch(error => {
+            console.error('Errore nel caricamento immagini default:', error);
+        });
+}
+
+// Visualizza le immagini default
+function displayDefaultImages(images) {
+    const defaultGrid = document.getElementById('defaultGalleryGrid');
+    
+    if (images.length === 0) {
+        defaultGrid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--color-light-text);">
+                <i class="fas fa-star" style="font-size: 3rem; margin-bottom: 15px; color: rgba(212, 175, 55, 0.3);"></i>
+                <p>Nessuna immagine default configurata</p>
+            </div>
+        `;
+        return;
+    }
+    
+    defaultGrid.innerHTML = '';
+    
+    images.forEach(image => {
+        const imageElement = createDefaultImageElement(image);
+        defaultGrid.appendChild(imageElement);
+    });
+}
+
+// Crea elemento immagine default
+function createDefaultImageElement(image) {
+    const div = document.createElement('div');
+    div.className = 'gallery-item';
+    div.innerHTML = `
+        <div style="position: relative;">
+            <img src="${image.thumbnail}" alt="${image.name}" class="gallery-image" onclick="openPreview('${image.fullPath}', '${image.name}', '${image.size}', '${image.date}')">
+            <div style="position: absolute; top: 10px; right: 10px; background-color: var(--color-gold); color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold;">
+                DEFAULT
+            </div>
+        </div>
+        <div class="gallery-info">
+            <div class="gallery-filename" title="${image.name}">${image.name}</div>
+            <div class="gallery-details">
+                <span>${image.size}</span>
+                <span>${image.date}</span>
+            </div>
+            <div class="gallery-actions">
+                <button class="btn btn-download" onclick="downloadPhoto('${image.fullPath}', '${image.name}')">
+                    <i class="fas fa-download"></i> Download
+                </button>
+                <button class="btn btn-danger" onclick="openDeleteDefaultModal('${image.fullPath}', '${image.name}')">
+                    <i class="fas fa-trash"></i> Elimina
+                </button>
+            </div>
+        </div>
+    `;
+    return div;
+}
+
+// Popola il select per la sostituzione immagini default
+function populateDefaultImageSelect(images) {
+    const select = document.getElementById('defaultImageSelect');
+    select.innerHTML = '<option value="">Seleziona un\'immagine default</option>';
+    
+    images.forEach(image => {
+        const option = document.createElement('option');
+        option.value = image.fullPath;
+        option.textContent = image.name;
+        select.appendChild(option);
+    });
+}
+
+// Sostituisci immagine default
+function replaceDefaultImage() {
+    const select = document.getElementById('defaultImageSelect');
+    const fileInput = document.getElementById('newDefaultImage');
+    
+    const selectedImage = select.value;
+    const newImageFile = fileInput.files[0];
+    
+    if (!selectedImage) {
+        alert('Seleziona un\'immagine default da sostituire.');
+        return;
+    }
+    
+    if (!newImageFile) {
+        alert('Seleziona una nuova immagine.');
+        return;
+    }
+    
+    // Validazione file
+    if (!newImageFile.type.startsWith('image/')) {
+        alert('Il file selezionato non è un\'immagine valida.');
+        return;
+    }
+    
+    if (newImageFile.size > 5 * 1024 * 1024) {
+        alert('L\'immagine non deve superare 5MB.');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('old_image_path', selectedImage);
+    formData.append('new_image', newImageFile);
+    
+    fetch('replace_default_image.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showTempMessage('Immagine default sostituita con successo!', 'success');
+            loadDefaultImages();
+            loadGallery(); // Ricarica tutta la galleria
+            fileInput.value = ''; // Reset file input
+        } else {
+            showTempMessage(`Errore nella sostituzione: ${data.error}`, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Errore:', error);
+        showTempMessage('Errore di connessione', 'error');
+    });
+}
+
+// Modal per eliminazione immagine default
+function openDeleteDefaultModal(filePath, fileName) {
+    photoToDelete = { 
+        path: filePath, 
+        name: fileName,
+        isDefault: true 
+    };
+    document.getElementById('deleteMessage').textContent = `Sei sicuro di voler eliminare l'immagine default "${fileName}"?`;
+    document.getElementById('deleteImagePreview').src = filePath;
+    document.getElementById('deleteModal').style.display = 'flex';
+}
+
+// Aggiorna statistiche
+function updateStats(data) {
+    document.getElementById('totalPhotos').textContent = data.stats.totalPhotos;
+    document.getElementById('totalSize').textContent = data.stats.totalSize;
+    document.getElementById('lastUpdate').textContent = data.stats.lastUpdate;
+    
+    // Calcola statistiche separate
+    const defaultPhotos = data.photos.filter(photo => photo.isDefault).length;
+    const userPhotos = data.photos.filter(photo => !photo.isDefault).length;
+    
+    document.getElementById('defaultPhotos').textContent = defaultPhotos;
+    document.getElementById('userPhotos').textContent = userPhotos;
+}
+
+// Modifica la funzione loadGallery per includere le immagini default
+function loadGallery() {
+    fetch('get_gallery.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Separa immagini default e utenti
+                const defaultImages = data.photos.filter(photo => photo.isDefault);
+                const userImages = data.photos.filter(photo => !photo.isDefault);
+                
+                currentPhotos = userImages;
+                displayPhotos(currentPhotos);
+                updateStats(data);
+                
+                // Carica anche le immagini default
+                loadDefaultImages();
+            } else {
+                console.error('Errore nel caricamento della galleria:', data.error);
+                showGalleryError('Errore nel caricamento della galleria');
+            }
+        })
+        .catch(error => {
+            console.error('Errore:', error);
+            showGalleryError('Errore di connessione');
+        });
+}
+
+// Modifica la funzione confirmDelete per gestire immagini default
+function confirmDelete() {
+    if (!photoToDelete) return;
+    
+    fetch('delete_gallery.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+            file_path: photoToDelete.path,
+            is_default: photoToDelete.isDefault || false
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            closeDeleteModal();
+            loadGallery();
+            showTempMessage(photoToDelete.isDefault ? 'Immagine default eliminata con successo!' : 'Foto eliminata con successo!', 'success');
+        } else {
+            showTempMessage(`Errore nell'eliminazione: ${data.error}`, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Errore:', error);
+        showTempMessage('Errore di connessione', 'error');
+    });
+}
         
         // Salva dati Luoghi
         function saveLuoghiData() {

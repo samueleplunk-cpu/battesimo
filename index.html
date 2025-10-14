@@ -520,30 +520,99 @@
         }
 
         /* Gallery */
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 40px;
-        }
-
-        .gallery-item {
-            border-radius: 10px;
-            overflow: hidden;
-            height: 250px;
+        .gallery-container {
             position: relative;
-            box-shadow: var(--shadow);
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .gallery-slider {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            background-color: var(--color-white);
+        }
+
+        .gallery-track {
+            display: flex;
             transition: transform 0.5s ease;
         }
 
-        .gallery-item:hover img {
-            transform: scale(1.05);
+        .gallery-slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .gallery-slide img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--color-gold);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .gallery-nav:hover {
+            background: var(--color-white);
+            box-shadow: var(--shadow);
+        }
+
+        .gallery-prev {
+            left: 20px;
+        }
+
+        .gallery-next {
+            right: 20px;
+        }
+
+        .gallery-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .gallery-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(212, 175, 55, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-indicator.active {
+            background-color: var(--color-gold);
+            transform: scale(1.2);
         }
 
         /* Contatti */
@@ -737,6 +806,25 @@
                 width: 120px;
                 height: 120px;
             }
+
+            /* Responsive per galleria */
+            .gallery-slide img {
+                height: 300px;
+            }
+            
+            .gallery-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            
+            .gallery-prev {
+                left: 10px;
+            }
+            
+            .gallery-next {
+                right: 10px;
+            }
         }
 
         /* Animazioni */
@@ -805,7 +893,7 @@
         </a>
         <a href="#gallery" class="menu-item">
             <i class="fas fa-images menu-icon"></i>
-            <span class="menu-label">Gallery</span>
+            <span class="menu-label">Galleria</span>
         </a>
         <a href="#contatti" class="menu-item">
             <i class="fas fa-phone menu-icon"></i>
@@ -1040,18 +1128,21 @@
                 </div>
             </div>
             
-            <div class="gallery">
-                <div class="gallery-item fade-in">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Foto 1">
+            <!-- Galleria a scorrimento -->
+            <div class="gallery-container fade-in">
+                <div class="gallery-slider">
+                    <div class="gallery-track" id="galleryTrack">
+                        <!-- Le immagini verranno caricate dinamicamente qui -->
+                    </div>
+                    <button class="gallery-nav gallery-prev" onclick="prevSlide()">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="gallery-nav gallery-next" onclick="nextSlide()">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
-                <div class="gallery-item fade-in">
-                    <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Foto 2">
-                </div>
-                <div class="gallery-item fade-in">
-                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Foto 3">
-                </div>
-                <div class="gallery-item fade-in">
-                    <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Foto 4">
+                <div class="gallery-indicators" id="galleryIndicators">
+                    <!-- Gli indicatori verranno generati dinamicamente qui -->
                 </div>
             </div>
         </div>
@@ -1429,7 +1520,7 @@
         showUploadMessage('Caricamento in corso...', 'info');
         
         // Invio AJAX
-        fetch('upload_photos.php', {
+        fetch('upload_gallery.php', {
             method: 'POST',
             body: formData
         })
@@ -1440,6 +1531,8 @@
                 // Reset del form
                 document.getElementById('upload-form').reset();
                 document.getElementById('file-list').innerHTML = '';
+                // Ricarica la galleria
+                loadGalleryImages();
             } else {
                 showUploadMessage(data.message, 'error');
             }
@@ -1476,6 +1569,136 @@
             ${message}
         </div>`;
     }
+
+    // ========== GALLERIA A SCORRIMENTO ==========
+    
+    let currentSlide = 0;
+    let galleryImages = [];
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    // Carica le immagini della galleria
+    function loadGalleryImages() {
+        fetch('get_gallery.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    galleryImages = data.photos;
+                    renderGallery();
+                } else {
+                    console.error('Errore nel caricamento della galleria:', data.error);
+                    // Fallback alle immagini di default
+                    loadDefaultGallery();
+                }
+            })
+            .catch(error => {
+                console.error('Errore:', error);
+                loadDefaultGallery();
+            });
+    }
+
+    // Fallback alle immagini di default
+    function loadDefaultGallery() {
+        galleryImages = [
+            { fullPath: 'assets/images/default-gallery/default1.jpg', name: 'Foto 1' },
+            { fullPath: 'assets/images/default-gallery/default2.jpg', name: 'Foto 2' },
+            { fullPath: 'assets/images/default-gallery/default3.jpg', name: 'Foto 3' },
+            { fullPath: 'assets/images/default-gallery/default4.jpg', name: 'Foto 4' }
+        ];
+        renderGallery();
+    }
+
+    // Renderizza la galleria
+    function renderGallery() {
+        const track = document.getElementById('galleryTrack');
+        const indicators = document.getElementById('galleryIndicators');
+        
+        track.innerHTML = '';
+        indicators.innerHTML = '';
+        
+        if (galleryImages.length === 0) {
+            track.innerHTML = '<div class="gallery-slide"><img src="/battesimo/img/profile.jpg" alt="Nessuna foto"><div class="gallery-caption">Nessuna foto disponibile</div></div>';
+            return;
+        }
+        
+        galleryImages.forEach((image, index) => {
+            // Slide
+            const slide = document.createElement('div');
+            slide.className = 'gallery-slide';
+            slide.innerHTML = `
+                <img src="${image.fullPath}" alt="${image.name}" loading="lazy">
+                <div class="gallery-caption">${image.name}</div>
+            `;
+            track.appendChild(slide);
+            
+            // Indicatore
+            const indicator = document.createElement('div');
+            indicator.className = `gallery-indicator ${index === 0 ? 'active' : ''}`;
+            indicator.addEventListener('click', () => goToSlide(index));
+            indicators.appendChild(indicator);
+        });
+        
+        updateGallery();
+    }
+
+    // Aggiorna la posizione della galleria
+    function updateGallery() {
+        const track = document.getElementById('galleryTrack');
+        const indicators = document.querySelectorAll('.gallery-indicator');
+        
+        track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentSlide);
+        });
+    }
+
+    // Navigazione
+    function nextSlide() {
+        if (galleryImages.length === 0) return;
+        currentSlide = (currentSlide + 1) % galleryImages.length;
+        updateGallery();
+    }
+
+    function prevSlide() {
+        if (galleryImages.length === 0) return;
+        currentSlide = (currentSlide - 1 + galleryImages.length) % galleryImages.length;
+        updateGallery();
+    }
+
+    function goToSlide(index) {
+        currentSlide = index;
+        updateGallery();
+    }
+
+    // Gestione swipe per dispositivi touch
+    function setupTouchEvents() {
+        const track = document.getElementById('galleryTrack');
+        
+        track.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        track.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+    }
+
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                nextSlide();
+            } else {
+                prevSlide();
+            }
+        }
+    }
+
+    // ========== INIZIALIZZAZIONE ==========
 
     // Animazioni al caricamento
     window.onload = function() {
@@ -1516,6 +1739,10 @@
                 saveRSVPToLocalStorage(formData);
             });
         }
+        
+        // Inizializza la galleria
+        loadGalleryImages();
+        setupTouchEvents();
     };
     
     // Aggiorna i countdown ogni secondo
