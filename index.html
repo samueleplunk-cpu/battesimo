@@ -622,6 +622,49 @@
             border: 2px solid var(--color-gold);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
+		
+		/* Footer */
+footer {
+    background-color: var(--color-light-gold);
+    padding: 40px 0;
+    text-align: center;
+    border-top: 1px solid rgba(212, 175, 55, 0.3);
+    margin-top: 60px;
+}
+
+.footer-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--color-text);
+    margin: 0;
+    padding: 0 20px;
+    position: relative;
+    display: inline-block;
+}
+
+.footer-text:before, .footer-text:after {
+    content: "❦";
+    color: var(--color-gold);
+    margin: 0 15px;
+    font-size: 1.2rem;
+}
+
+/* Responsive per footer */
+@media (max-width: 768px) {
+    footer {
+        padding: 30px 0;
+        margin-top: 40px;
+    }
+    
+    .footer-text {
+        font-size: 1.1rem;
+    }
+    
+    .footer-text:before, .footer-text:after {
+        margin: 0 10px;
+        font-size: 1rem;
+    }
+}
 
         /* Responsive */
         @media (max-width: 768px) {
