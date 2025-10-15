@@ -519,104 +519,110 @@
             width: 100%;
         }
 
-        /* NUOVA GALLERIA MULTI-IMMAGINE */
+        /* NUOVA GALLERIA MULTI-IMMAGINE - VERSIONE AGGIORNATA */
         .gallery-multi-container {
-            position: relative;
-            max-width: 1200px;
-            margin: 0 auto;
-            overflow: hidden;
-        }
+    position: relative;
+    max-width: 1000px; /* Ridotto da 1200px */
+    margin: 0 auto;
+    overflow: hidden;
+}
 
-        .gallery-multi-track {
-            display: flex;
-            transition: transform 0.5s ease;
-            gap: 15px;
-            padding: 10px 0;
-        }
+.gallery-multi-track {
+    display: flex;
+    transition: transform 0.5s ease;
+    gap: 10px; /* Ridotto da 15px */
+    padding: 5px 0; /* Ridotto da 10px 0 */
+}
 
-        .gallery-group {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            min-width: 100%;
-            flex-shrink: 0;
-        }
+.gallery-group {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px; /* Ridotto da 15px */
+    min-width: 100%;
+    flex-shrink: 0;
+}
 
-        .gallery-item {
-            position: relative;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            aspect-ratio: 1/1;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
+.gallery-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    aspect-ratio: 1/1;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    /* DIMENSIONI RIDOTTE */
+    max-width: 200px;
+    max-height: 200px;
+    margin: 0 auto; /* Centra le foto */
+}
 
-        .gallery-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
 
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
 
-        .gallery-multi-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: var(--color-gold);
-            transition: all 0.3s ease;
-            z-index: 10;
-            box-shadow: var(--shadow);
-        }
+/* RIMUOVI I PLACEHOLDER VUOTI - MODIFICA IMPORTANTE */
+.gallery-item.empty-placeholder {
+    display: none !important; /* Nasconde completamente i placeholder */
+}
 
-        .gallery-multi-nav:hover {
-            background: var(--color-white);
-            transform: translateY(-50%) scale(1.1);
-        }
+/* RIMOSSI: Pulsanti di navigazione dalla galleria principale */
+/* .gallery-multi-nav {
+    display: none;
+} */
 
-        .gallery-multi-prev {
-            left: 20px;
-        }
+.gallery-multi-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+}
 
-        .gallery-multi-next {
-            right: 20px;
-        }
+.gallery-multi-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(212, 175, 55, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
-        .gallery-multi-indicators {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 30px;
-        }
+.gallery-multi-indicator.active {
+    background-color: var(--color-gold);
+    transform: scale(1.2);
+}
 
-        .gallery-multi-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: rgba(212, 175, 55, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+/* RESPONSIVE - DIMENSIONI RIDOTTE */
+@media (max-width: 1024px) {
+    .gallery-group {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .gallery-item {
+        max-width: 180px;
+        max-height: 180px;
+    }
+}
 
-        .gallery-multi-indicator.active {
-            background-color: var(--color-gold);
-            transform: scale(1.2);
-        }
+@media (max-width: 768px) {
+    .gallery-group {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    
+    .gallery-item {
+        max-width: 250px;
+        max-height: 250px;
+    }
+}
 
         /* Lightbox */
         .lightbox {
@@ -895,41 +901,6 @@
             .footer-text:before, .footer-text:after {
                 margin: 0 10px;
                 font-size: 1rem;
-            }
-        }
-
-        /* Responsive per galleria multi-immagine */
-        @media (max-width: 1024px) {
-            .gallery-group {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-            
-            .gallery-multi-nav {
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .gallery-group {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-            
-            .gallery-multi-nav {
-                width: 35px;
-                height: 35px;
-                font-size: 1rem;
-            }
-            
-            .gallery-multi-prev {
-                left: 10px;
-            }
-            
-            .gallery-multi-next {
-                right: 10px;
             }
         }
 
@@ -1217,17 +1188,12 @@
                 </div>
             </div>
             
-            <!-- NUOVA GALLERIA MULTI-IMMAGINE -->
+            <!-- NUOVA GALLERIA MULTI-IMMAGINE - VERSIONE AGGIORNATA -->
             <div class="gallery-multi-container fade-in">
                 <div class="gallery-multi-track" id="galleryMultiTrack">
                     <!-- I gruppi di immagini verranno generati dinamicamente qui -->
                 </div>
-                <button class="gallery-multi-nav gallery-multi-prev" onclick="prevGroup()">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="gallery-multi-nav gallery-multi-next" onclick="nextGroup()">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+                <!-- RIMOSSI: Pulsanti di navigazione dalla galleria principale -->
             </div>
             <div class="gallery-multi-indicators" id="galleryMultiIndicators">
                 <!-- Gli indicatori verranno generati dinamicamente qui -->
@@ -1674,183 +1640,300 @@
         </div>`;
     }
 
-    // ========== NUOVA GALLERIA MULTI-IMMAGINE ==========
+    // ========== GALLERIA MULTI-IMMAGINE - VERSIONE CORRETTA ==========
 
-    let currentGroup = 0;
-    let totalGroups = 0;
-    let galleryImages = [];
-    const IMAGES_PER_GROUP = 4;
+let currentGroup = 0;
+let totalGroups = 0;
+let galleryImages = [];
+const IMAGES_PER_GROUP = 4;
+let autoScrollInterval;
+let isUserInteracting = false;
 
-    // Carica le immagini della galleria
-    function loadGalleryImages() {
-        fetch('get_gallery.php')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    galleryImages = data.photos;
-                    renderMultiGallery();
-                } else {
-                    console.error('Errore nel caricamento della galleria:', data.error);
-                    loadDefaultGallery();
-                }
-            })
-            .catch(error => {
-                console.error('Errore:', error);
+// CARICA LE IMMAGINI DELLA GALLERIA - VERSIONE DEBUG
+function loadGalleryImages() {
+    console.log('=== CARICAMENTO GALLERIA INIZIATO ===');
+    
+    fetch('get_gallery.php')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Risposta da get_gallery.php:', data);
+            
+            if (data.success && data.photos && data.photos.length > 0) {
+                galleryImages = data.photos;
+                console.log(`✅ Immagini caricate: ${galleryImages.length} foto`);
+                renderMultiGallery();
+                startAutoScroll();
+            } else {
+                console.warn('❌ Nessuna foto trovata, carico immagini default');
                 loadDefaultGallery();
-            });
-    }
-
-    // Fallback alle immagini di default
-    function loadDefaultGallery() {
-        galleryImages = [
-            { fullPath: 'assets/images/default-gallery/default1.jpg', name: 'Foto 1' },
-            { fullPath: 'assets/images/default-gallery/default2.jpg', name: 'Foto 2' },
-            { fullPath: 'assets/images/default-gallery/default3.jpg', name: 'Foto 3' },
-            { fullPath: 'assets/images/default-gallery/default4.jpg', name: 'Foto 4' },
-            { fullPath: 'assets/images/default-gallery/default1.jpg', name: 'Foto 5' },
-            { fullPath: 'assets/images/default-gallery/default2.jpg', name: 'Foto 6' },
-            { fullPath: 'assets/images/default-gallery/default3.jpg', name: 'Foto 7' },
-            { fullPath: 'assets/images/default-gallery/default4.jpg', name: 'Foto 8' }
-        ];
-        renderMultiGallery();
-    }
-
-    // Renderizza la galleria multi-immagine
-    function renderMultiGallery() {
-        const track = document.getElementById('galleryMultiTrack');
-        const indicators = document.getElementById('galleryMultiIndicators');
-        
-        track.innerHTML = '';
-        indicators.innerHTML = '';
-        
-        if (galleryImages.length === 0) {
-            track.innerHTML = `
-                <div class="gallery-group" style="text-align: center; padding: 40px; color: var(--color-light-text);">
-                    <div style="grid-column: 1 / -1;">
-                        <i class="fas fa-images" style="font-size: 3rem; margin-bottom: 15px; color: rgba(212, 175, 55, 0.3);"></i>
-                        <p>Nessuna foto disponibile nella galleria</p>
-                    </div>
-                </div>
-            `;
-            return;
-        }
-        
-        // Calcola il numero totale di gruppi
-        totalGroups = Math.ceil(galleryImages.length / IMAGES_PER_GROUP);
-        
-        // Crea i gruppi
-        for (let groupIndex = 0; groupIndex < totalGroups; groupIndex++) {
-            const group = document.createElement('div');
-            group.className = 'gallery-group';
-            
-            // Aggiungi le immagini al gruppo
-            const startIndex = groupIndex * IMAGES_PER_GROUP;
-            const endIndex = Math.min(startIndex + IMAGES_PER_GROUP, galleryImages.length);
-            
-            for (let i = startIndex; i < endIndex; i++) {
-                const image = galleryImages[i];
-                const item = document.createElement('div');
-                item.className = 'gallery-item';
-                item.innerHTML = `
-                    <img src="${image.fullPath}" alt="${image.name}" 
-                         loading="lazy" 
-                         onclick="openLightbox(${i})">
-                `;
-                group.appendChild(item);
             }
-            
-            // Se l'ultimo gruppo non è completo, aggiungi placeholder vuoti
-            const remainingSlots = IMAGES_PER_GROUP - (endIndex - startIndex);
-            for (let i = 0; i < remainingSlots; i++) {
-                const emptyItem = document.createElement('div');
-                emptyItem.className = 'gallery-item';
-                emptyItem.style.visibility = 'hidden'; // Nasconde i placeholder
-                group.appendChild(emptyItem);
-            }
-            
-            track.appendChild(group);
-            
-            // Crea indicatori
-            const indicator = document.createElement('div');
-            indicator.className = `gallery-multi-indicator ${groupIndex === 0 ? 'active' : ''}`;
-            indicator.addEventListener('click', () => goToGroup(groupIndex));
-            indicators.appendChild(indicator);
-        }
-        
-        updateMultiGallery();
-    }
-
-    // Aggiorna la posizione della galleria
-    function updateMultiGallery() {
-        const track = document.getElementById('galleryMultiTrack');
-        const indicators = document.querySelectorAll('.gallery-multi-indicator');
-        
-        track.style.transform = `translateX(-${currentGroup * 100}%)`;
-        
-        indicators.forEach((indicator, index) => {
-            indicator.classList.toggle('active', index === currentGroup);
+        })
+        .catch(error => {
+            console.error('❌ Errore fetch:', error);
+            loadDefaultGallery();
         });
+}
+
+// FALLBACK IMMAGINI DEFAULT
+function loadDefaultGallery() {
+    console.log('=== CARICAMENTO IMMAGINI DEFAULT ===');
+    
+    galleryImages = [
+        { fullPath: 'https://picsum.photos/300/300?1', name: 'Foto Default 1' },
+        { fullPath: 'https://picsum.photos/300/300?2', name: 'Foto Default 2' },
+        { fullPath: 'https://picsum.photos/300/300?3', name: 'Foto Default 3' },
+        { fullPath: 'https://picsum.photos/300/300?4', name: 'Foto Default 4' },
+        { fullPath: 'https://picsum.photos/300/300?5', name: 'Foto Default 5' },
+        { fullPath: 'https://picsum.photos/300/300?6', name: 'Foto Default 6' }
+    ];
+    
+    console.log(`✅ Immagini default caricate: ${galleryImages.length} foto`);
+    renderMultiGallery();
+    startAutoScroll();
+}
+
+// RENDER GALLERIA - VERSIONE CORRETTA
+function renderMultiGallery() {
+    console.log('=== RENDER GALLERIA ===');
+    console.log(`Foto da renderizzare: ${galleryImages.length}`);
+    
+    const track = document.getElementById('galleryMultiTrack');
+    const indicators = document.getElementById('galleryMultiIndicators');
+    
+    if (!track) {
+        console.error('❌ Elemento galleryMultiTrack non trovato!');
+        return;
     }
-
-    // Navigazione gruppi
-    function nextGroup() {
-        if (totalGroups === 0) return;
-        currentGroup = (currentGroup + 1) % totalGroups;
-        updateMultiGallery();
+    
+    // PULISCI TUTTO
+    track.innerHTML = '';
+    indicators.innerHTML = '';
+    
+    if (galleryImages.length === 0) {
+        console.warn('⚠️ Nessuna foto disponibile');
+        track.innerHTML = `
+            <div class="gallery-group" style="text-align: center; padding: 40px; color: var(--color-light-text); grid-column: 1 / -1;">
+                <i class="fas fa-images" style="font-size: 3rem; margin-bottom: 15px; color: rgba(212, 175, 55, 0.3);"></i>
+                <p>Nessuna foto disponibile nella galleria</p>
+            </div>
+        `;
+        return;
     }
-
-    function prevGroup() {
-        if (totalGroups === 0) return;
-        currentGroup = (currentGroup - 1 + totalGroups) % totalGroups;
-        updateMultiGallery();
-    }
-
-    function goToGroup(index) {
-        currentGroup = index;
-        updateMultiGallery();
-    }
-
-    // ========== LIGHTBOX ==========
-
-    let currentLightboxIndex = 0;
-
-    function openLightbox(index) {
-        currentLightboxIndex = index;
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightboxImg');
-        const lightboxCaption = document.getElementById('lightboxCaption');
+    
+    // CALCOLA GRUPPI CORRETTAMENTE
+    totalGroups = Math.ceil(galleryImages.length / IMAGES_PER_GROUP);
+    console.log(`📊 Gruppi totali: ${totalGroups} (${galleryImages.length} foto / ${IMAGES_PER_GROUP} per gruppo)`);
+    
+    // CREA I GRUPPI
+    for (let groupIndex = 0; groupIndex < totalGroups; groupIndex++) {
+        const group = document.createElement('div');
+        group.className = 'gallery-group';
         
-        lightboxImg.src = galleryImages[index].fullPath;
-        lightboxCaption.textContent = galleryImages[index].name;
-        lightbox.style.display = 'flex';
+        // INDICI DELLE FOTO NEL GRUPPO
+        const startIndex = groupIndex * IMAGES_PER_GROUP;
+        const endIndex = Math.min(startIndex + IMAGES_PER_GROUP, galleryImages.length);
+        const photosInThisGroup = endIndex - startIndex;
         
-        // Previene lo scroll del body
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeLightbox() {
-        const lightbox = document.getElementById('lightbox');
-        lightbox.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    function lightboxNext() {
-        currentLightboxIndex = (currentLightboxIndex + 1) % galleryImages.length;
-        updateLightbox();
-    }
-
-    function lightboxPrev() {
-        currentLightboxIndex = (currentLightboxIndex - 1 + galleryImages.length) % galleryImages.length;
-        updateLightbox();
-    }
-
-    function updateLightbox() {
-        const lightboxImg = document.getElementById('lightboxImg');
-        const lightboxCaption = document.getElementById('lightboxCaption');
+        console.log(`🖼️ Gruppo ${groupIndex}: foto ${startIndex}-${endIndex} (${photosInThisGroup} foto)`);
         
-        lightboxImg.src = galleryImages[currentLightboxIndex].fullPath;
-        lightboxCaption.textContent = galleryImages[currentLightboxIndex].name;
+        // AGGIUNGI LE FOTO REALI
+        for (let i = startIndex; i < endIndex; i++) {
+            const image = galleryImages[i];
+            console.log(`   ➕ Aggiungendo foto ${i}: ${image.name}`);
+            
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.innerHTML = `
+                <img src="${image.fullPath}" alt="${image.name}" 
+                     loading="lazy" 
+                     onclick="openLightbox(${i})">
+            `;
+            group.appendChild(item);
+        }
+        
+        // 🔥 MODIFICA IMPORTANTE: NON AGGIUNGERE PLACEHOLDER VUOTI
+        // Il grid layout si occuperà automaticamente dello spazio
+        
+        track.appendChild(group);
+        
+        // CREA INDICATORI
+        const indicator = document.createElement('div');
+        indicator.className = `gallery-multi-indicator ${groupIndex === 0 ? 'active' : ''}`;
+        indicator.addEventListener('click', () => goToGroup(groupIndex));
+        indicators.appendChild(indicator);
     }
+    
+    updateMultiGallery();
+    setupGalleryInteractions();
+    
+    console.log('✅ Render galleria completato');
+}
+
+// AGGIORNA POSIZIONE GALLERIA
+function updateMultiGallery() {
+    const track = document.getElementById('galleryMultiTrack');
+    const indicators = document.querySelectorAll('.gallery-multi-indicator');
+    
+    if (!track) return;
+    
+    track.style.transform = `translateX(-${currentGroup * 100}%)`;
+    
+    indicators.forEach((indicator, index) => {
+        indicator.classList.toggle('active', index === currentGroup);
+    });
+    
+    console.log(`🔄 Galleria aggiornata: gruppo ${currentGroup + 1}/${totalGroups}`);
+}
+
+// SCORRIMENTO AUTOMATICO - VERSIONE MIGLIORATA
+function startAutoScroll() {
+    // FERMA SCORRIMENTO PRECEDENTE
+    if (autoScrollInterval) {
+        clearInterval(autoScrollInterval);
+    }
+    
+    console.log(`🎬 Avvio scorrimento automatico: ${totalGroups} gruppi`);
+    
+    // SOLO SE CI SONO ALMENO 2 GRUPPI
+    if (totalGroups <= 1) {
+        console.log('⏸️ Scorrimento automatico disattivato: solo 1 gruppo');
+        return;
+    }
+    
+    autoScrollInterval = setInterval(() => {
+        if (!isUserInteracting) {
+            console.log(`➡️ Scorrimento automatico al prossimo gruppo`);
+            nextGroup();
+        }
+    }, 6000); // 6 secondi
+}
+
+function stopAutoScroll() {
+    if (autoScrollInterval) {
+        clearInterval(autoScrollInterval);
+        autoScrollInterval = null;
+        console.log('⏹️ Scorrimento automatico fermato');
+    }
+}
+
+function resumeAutoScroll() {
+    if (!autoScrollInterval && totalGroups > 1) {
+        console.log('▶️ Ripresa scorrimento automatico');
+        startAutoScroll();
+    }
+}
+
+// NAVIGAZIONE GRUPPI
+function nextGroup() {
+    if (totalGroups <= 1) return;
+    
+    currentGroup = (currentGroup + 1) % totalGroups;
+    updateMultiGallery();
+}
+
+function prevGroup() {
+    if (totalGroups <= 1) return;
+    
+    currentGroup = (currentGroup - 1 + totalGroups) % totalGroups;
+    updateMultiGallery();
+}
+
+function goToGroup(index) {
+    if (index < 0 || index >= totalGroups) return;
+    
+    currentGroup = index;
+    updateMultiGallery();
+}
+
+// GESTIONE INTERAZIONI UTENTE
+function setupGalleryInteractions() {
+    const galleryContainer = document.querySelector('.gallery-multi-container');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    
+    if (!galleryContainer) return;
+    
+    // HOVER
+    galleryContainer.addEventListener('mouseenter', () => {
+        console.log('🐭 Hover attivo - pausa scorrimento');
+        isUserInteracting = true;
+        stopAutoScroll();
+    });
+    
+    galleryContainer.addEventListener('mouseleave', () => {
+        console.log('🐭 Hover disattivo - ripresa scorrimento');
+        isUserInteracting = false;
+        setTimeout(resumeAutoScroll, 1000);
+    });
+    
+    // CLICK
+    galleryItems.forEach(item => {
+        item.addEventListener('click', () => {
+            console.log('👆 Click su foto - pausa scorrimento');
+            isUserInteracting = true;
+            stopAutoScroll();
+            
+            // RIPRENDI DOPO 10 SECONDI
+            setTimeout(() => {
+                isUserInteracting = false;
+                resumeAutoScroll();
+            }, 10000);
+        });
+    });
+}
+
+// LIGHTBOX - VERSIONE CORRETTA
+let currentLightboxIndex = 0;
+
+function openLightbox(index) {
+    console.log(`🔍 Apertura lightbox: foto ${index}`);
+    
+    if (index < 0 || index >= galleryImages.length) {
+        console.error('❌ Indice lightbox non valido');
+        return;
+    }
+    
+    currentLightboxIndex = index;
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    
+    lightboxImg.src = galleryImages[index].fullPath;
+    lightboxCaption.textContent = galleryImages[index].name;
+    lightbox.style.display = 'flex';
+    
+    document.body.style.overflow = 'hidden';
+    stopAutoScroll();
+}
+
+function closeLightbox() {
+    console.log('❌ Chiusura lightbox');
+    const lightbox = document.getElementById('lightbox');
+    lightbox.style.display = 'none';
+    document.body.style.overflow = 'auto';
+    
+    setTimeout(() => {
+        isUserInteracting = false;
+        resumeAutoScroll();
+    }, 2000);
+}
+
+function lightboxNext() {
+    currentLightboxIndex = (currentLightboxIndex + 1) % galleryImages.length;
+    updateLightbox();
+}
+
+function lightboxPrev() {
+    currentLightboxIndex = (currentLightboxIndex - 1 + galleryImages.length) % galleryImages.length;
+    updateLightbox();
+}
+
+function updateLightbox() {
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    
+    lightboxImg.src = galleryImages[currentLightboxIndex].fullPath;
+    lightboxCaption.textContent = galleryImages[currentLightboxIndex].name;
+}
 
     // Gestione tastiera per lightbox
     document.addEventListener('keydown', function(e) {
@@ -1874,11 +1957,19 @@
         
         track.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
+            isUserInteracting = true;
+            stopAutoScroll();
         });
         
         track.addEventListener('touchend', (e) => {
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe(touchStartX, touchEndX);
+            
+            // Riprendi dopo 10 secondi di inattività
+            setTimeout(() => {
+                isUserInteracting = false;
+                resumeAutoScroll();
+            }, 10000);
         });
     }
 
@@ -1896,58 +1987,56 @@
     }
 
     // ========== INIZIALIZZAZIONE ==========
-
-    // Animazioni al caricamento
-    window.onload = function() {
-        // Animazioni al caricamento
-        const fadeElements = document.querySelectorAll('.fade-in');
-        fadeElements.forEach((el, index) => {
-            setTimeout(() => {
-                el.style.opacity = '1';
-                el.style.transform = 'translateY(0)';
-            }, index * 200);
+window.onload = function() {
+    console.log('=== PAGINA CARICATA ===');
+    
+    // ANIMAZIONI
+    const fadeElements = document.querySelectorAll('.fade-in');
+    fadeElements.forEach((el, index) => {
+        setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        }, index * 200);
+    });
+    
+    // STELLE DECORATIVE
+    createStars();
+    
+    // MENU ATTIVO
+    handleActiveMenu();
+    
+    // CARICA DATI ADMIN
+    loadAdminData();
+    
+    // UPLOAD
+    checkUploadVisibility();
+    setupFileUpload();
+    
+    // COUNTDOWN
+    updateCountdown();
+    updateNewCountdown();
+    
+    // RSVP
+    const rsvpForm = document.querySelector('form[action="send_email.php"]');
+    if (rsvpForm) {
+        rsvpForm.addEventListener('submit', function(e) {
+            const formData = new FormData(this);
+            saveRSVPToLocalStorage(formData);
         });
-        
-        // Crea stelle decorative
-        createStars();
-        
-        // Gestione menu attivo
-        handleActiveMenu();
-        
-        // CARICA I DATI DAL PANNELLO ADMIN
-        loadAdminData();
-        
-        // AGGIUNTA: Controlla visibilità sezione upload
-        checkUploadVisibility();
-        
-        // Setup gestione file upload
-        setupFileUpload();
-        
-        // Aggiorna i countdown
-        updateCountdown();
-        updateNewCountdown();
-        
-        // Aggiungi gestione del form RSVP
-        const rsvpForm = document.querySelector('form[action="send_email.php"]');
-        if (rsvpForm) {
-            rsvpForm.addEventListener('submit', function(e) {
-                // Salva i dati nel localStorage prima dell'invio
-                const formData = new FormData(this);
-                saveRSVPToLocalStorage(formData);
-            });
-        }
-        
-        // Inizializza la NUOVA galleria multi-immagine
+    }
+    
+    // 🔥 INIZIALIZZA GALLERIA PER ULTIMA - IMPORTANTE!
+    setTimeout(() => {
+        console.log('🎯 Inizializzazione galleria...');
         loadGalleryImages();
         setupTouchEvents();
-    };
-    
-    // Aggiorna i countdown ogni secondo
-    setInterval(updateCountdown, 1000);
-    setInterval(updateNewCountdown, 1000);
-    
-    // AGGIUNTA: Controlla visibilità upload ogni minuto
-    setInterval(checkUploadVisibility, 60000);
+    }, 500);
+};
+
+// AGGIORNA COUNTDOWN
+setInterval(updateCountdown, 1000);
+setInterval(updateNewCountdown, 1000);
+setInterval(checkUploadVisibility, 60000);
     
     // Crea stelle decorative
     function createStars() {
