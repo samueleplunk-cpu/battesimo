@@ -2,7 +2,7 @@
 // === CONFIGURAZIONE EMAIL RSVP ===
 $to = getRsvpEmailFromConfig();
 if (!$to) {
-    $to = "samuele.falcone@plunk.it";
+    $to = "test@test.it";
     error_log("RSVP: Usando email di fallback: " . $to);
 }
 // === FINE CONFIGURAZIONE ===
@@ -12,21 +12,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = htmlspecialchars($_POST['name']);
     $email = htmlspecialchars($_POST['email']);
     $phone = htmlspecialchars($_POST['phone']);
-    $participants = htmlspecialchars($_POST['participants']);
+    $adults = htmlspecialchars($_POST['adults']);
+    $children = htmlspecialchars($_POST['children']);
     $message_text = htmlspecialchars($_POST['message']);
     
-    error_log("RSVP Ricevuto: $name, $email, Destinazione: $to");
+    error_log("RSVP Ricevuto: $name, $email, Adulti: $adults, Bambini: $children, Destinazione: $to");
 
     // Oggetto dell'email
     $subject = "Conferma Partecipazione Battesimo - " . $name;
     
-    // Corpo dell'email MIGLIORATO
+    // Corpo dell'email AGGIORNATO
     $email_content = "CONFERMA DI PARTECIPAZIONE AL BATTESIMO\n\n";
     $email_content .= "============================================\n";
     $email_content .= "NOME: $name\n";
     $email_content .= "EMAIL: $email\n";
-    $email_content .= "TELEFONO: " . ($phone ? $phone : "Non fornito") . "\n";
-    $email_content .= "NUMERO PARTECIPANTI: " . ($participants ? $participants : "Non specificato") . "\n";
+    $email_content .= "TELEFONO: $phone\n";
+    $email_content .= "NUMERO ADULTI: $adults\n";
+    $email_content .= "NUMERO BAMBINI: $children\n";
     $email_content .= "MESSAGGIO: " . ($message_text ? $message_text : "Nessun messaggio") . "\n";
     $email_content .= "============================================\n\n";
     $email_content .= "Data e ora: " . date('d/m/Y H:i:s') . "\n";
@@ -46,6 +48,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Invio email
     if (mail($to, $subject, $email_content, $headers, "-fnoreply@" . $_SERVER['HTTP_HOST'])) {
         error_log("RSVP SUCCESS: Email inviata a: " . $to);
+        
+        // Salva nel localStorage per compatibilità con admin
+        echo "<script>
+            if (typeof saveRSVPToLocalStorage === 'function') {
+                const formData = new FormData();
+                formData.append('name', '$name');
+                formData.append('email', '$email');
+                formData.append('phone', '$phone');
+                formData.append('adults', '$adults');
+                formData.append('children', '$children');
+                formData.append('message', '$message_text');
+                saveRSVPToLocalStorage(formData);
+            }
+        </script>";
         
         // Reindirizza alla pagina di ringraziamento
         header('Location: grazie.html');

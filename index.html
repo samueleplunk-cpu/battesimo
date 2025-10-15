@@ -1147,53 +1147,63 @@
         </div>
     </section>
 
-    <!-- RSVP - FORM AGGIORNATO CON PHP -->
-    <section id="rsvp">
-        <div class="container">
-            <h2 class="section-title">Conferma Partecipazione</h2>
-            <div class="rsvp-form fade-in">
-                <!-- MODIFICA: Form che punta a send_email.php -->
-                <form action="send_email.php" method="POST">
-                    <div class="form-group">
-                        <label class="form-label" for="guestName">Nome e Cognome *</label>
-                        <input type="text" id="guestName" name="name" class="form-input" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="guestEmail">Email *</label>
-                        <input type="email" id="guestEmail" name="email" class="form-input" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="guestPhone">Telefono</label>
-                        <input type="tel" id="guestPhone" name="phone" class="form-input">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="guestCount">Numero di partecipanti *</label>
-                        <select id="guestCount" name="participants" class="form-select" required>
-                            <option value="" disabled selected>Seleziona</option>
-                            <option value="1">1 persona</option>
-                            <option value="2">2 persone</option>
-                            <option value="3">3 persone</option>
-                            <option value="4">4 persone</option>
-                            <option value="5">5 o più persone</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="guestMessage">Messaggio (opzionale)</label>
-                        <textarea id="guestMessage" name="message" class="form-textarea" placeholder="Scrivi un messaggio per la famiglia..."></textarea>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-block">Conferma Partecipazione</button>
-                    <p style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: var(--color-light-text);">
-                        Riceverai una conferma della tua partecipazione
-                    </p>
-                </form>
-            </div>
+    <!-- RSVP - FORM AGGIORNATO CON ADULTI/BAMBINI -->
+<section id="rsvp">
+    <div class="container">
+        <h2 class="section-title">Conferma Partecipazione</h2>
+        <div class="rsvp-form fade-in">
+            <form action="send_email.php" method="POST">
+                <div class="form-group">
+                    <label class="form-label" for="guestName">Nome e Cognome *</label>
+                    <input type="text" id="guestName" name="name" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="guestEmail">Email *</label>
+                    <input type="email" id="guestEmail" name="email" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="guestPhone">Telefono *</label>
+                    <input type="tel" id="guestPhone" name="phone" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="adultsCount">Numero di adulti *</label>
+                    <select id="adultsCount" name="adults" class="form-select" required>
+                        <option value="" disabled selected>Seleziona</option>
+                        <option value="1">1 adulto</option>
+                        <option value="2">2 adulti</option>
+                        <option value="3">3 adulti</option>
+                        <option value="4">4 adulti</option>
+                        <option value="5">5 o più adulti</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="childrenCount">Numero di bambini *</label>
+                    <select id="childrenCount" name="children" class="form-select" required>
+                        <option value="" disabled selected>Seleziona</option>
+                        <option value="0">Nessun bambino</option>
+                        <option value="1">1 bambino</option>
+                        <option value="2">2 bambini</option>
+                        <option value="3">3+ bambini</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="guestMessage">Messaggio (opzionale)</label>
+                    <textarea id="guestMessage" name="message" class="form-textarea" placeholder="Scrivi un messaggio per la famiglia..."></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-block">Conferma Partecipazione</button>
+                <p style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: var(--color-light-text);">
+                    Riceverai una conferma della tua partecipazione
+                </p>
+            </form>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Gallery -->
     <section id="gallery" class="section-bg">
@@ -1492,21 +1502,22 @@
     // ========== NUOVE FUNZIONI PER RSVP ==========
     
     // Funzione per salvare RSVP nel localStorage
-    function saveRSVPToLocalStorage(formData) {
-        const rsvpData = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            phone: formData.get('phone'),
-            count: formData.get('participants'),
-            message: formData.get('message'),
-            timestamp: new Date().toISOString()
-        };
-        
-        let existingRSVPs = JSON.parse(localStorage.getItem('baptismRSVPs')) || [];
-        existingRSVPs.push(rsvpData);
-        localStorage.setItem('baptismRSVPs', JSON.stringify(existingRSVPs));
-        console.log('RSVP salvato nel localStorage:', rsvpData);
-    }
+function saveRSVPToLocalStorage(formData) {
+    const rsvpData = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        adults: formData.get('adults'),
+        children: formData.get('children'),
+        message: formData.get('message'),
+        timestamp: new Date().toISOString()
+    };
+    
+    let existingRSVPs = JSON.parse(localStorage.getItem('baptismRSVPs')) || [];
+    existingRSVPs.push(rsvpData);
+    localStorage.setItem('baptismRSVPs', JSON.stringify(existingRSVPs));
+    console.log('RSVP salvato nel localStorage:', rsvpData);
+}
     
     // ========== FUNZIONALITÀ CARICA FOTO ==========
 
