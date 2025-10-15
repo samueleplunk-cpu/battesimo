@@ -651,15 +651,29 @@
             border-radius: 10px;
         }
 
+        /* Pulsante di chiusura lightbox */
         .lightbox-close {
             position: absolute;
-            top: -40px;
-            right: 0;
-            background: none;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
             border: none;
             color: white;
             font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .lightbox-close:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.1);
         }
 
         .lightbox-nav {
@@ -901,6 +915,29 @@
             .footer-text:before, .footer-text:after {
                 margin: 0 10px;
                 font-size: 1rem;
+            }
+
+            /* Responsive per lightbox */
+            .lightbox-close {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+            }
+
+            .lightbox-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .lightbox-prev {
+                left: 10px;
+            }
+
+            .lightbox-next {
+                right: 10px;
             }
         }
 
