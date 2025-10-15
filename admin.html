@@ -764,7 +764,11 @@
                                         <i class="fas fa-save"></i> Salva Email
                                     </button>
                                 </div>
-                                <div class="success-message" id="emailSuccess" style="display: none;">Email salvata con successo!</div>
+                                <div class="success-message" id="emailSuccess" style="display: none;"></div>
+                                <div class="email-config-info">
+                                    <p><strong>Stato attuale:</strong> <span id="currentEmailStatus">Caricamento...</span></p>
+                                    <p><strong>Ultimo aggiornamento:</strong> <span id="lastUpdateStatus">-</span></p>
+                                </div>
                             </div>
                             
                             <div class="email-config-info">
@@ -1133,6 +1137,137 @@
             });
         }
         
+        // ========== FUNZIONI PER GESTIONE EMAIL RSVP ==========
+        
+        // Salva l'email dell'admin e aggiorna send_email.php
+        function saveAdminEmail() {
+            const adminEmail = document.getElementById('adminEmail').value;
+            
+            if (adminEmail && isValidEmail(adminEmail)) {
+                // Salva nel localStorage
+                localStorage.setItem('adminRSVPEmail', adminEmail);
+                
+                // Salva la configurazione con timestamp
+                const emailConfig = {
+                    rsvpEmail: adminEmail,
+                    lastUpdated: new Date().toISOString()
+                };
+                localStorage.setItem('rsvpEmailConfig', JSON.stringify(emailConfig));
+                
+                // Aggiorna il file send_email.php via AJAX
+                updateSendEmailFile(adminEmail);
+                
+            } else {
+                alert('Inserisci un indirizzo email valido.');
+            }
+        }
+
+        // Aggiorna il file send_email.php con la nuova email
+        function updateSendEmailFile(email) {
+            fetch('update_rsvp_email.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'email=' + encodeURIComponent(email)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Mostra messaggio di successo
+                    document.getElementById('emailSuccess').style.display = 'block';
+                    document.getElementById('emailSuccess').textContent = 'Email salvata e configurazione aggiornata con successo!';
+                    setTimeout(() => {
+                        document.getElementById('emailSuccess').style.display = 'none';
+                    }, 3000);
+                    
+                    // Aggiorna lo stato
+                    loadEmailStatus();
+                    console.log('Email aggiornata con successo:', data.message);
+                } else {
+                    throw new Error(data.error || 'Errore sconosciuto');
+                }
+            })
+            .catch(error => {
+                console.error('Errore nell\'aggiornamento:', error);
+                document.getElementById('emailSuccess').style.display = 'block';
+                document.getElementById('emailSuccess').textContent = 'Email salvata localmente ma errore nell\'aggiornamento del server: ' + error.message;
+                document.getElementById('emailSuccess').className = 'error-message';
+                setTimeout(() => {
+                    document.getElementById('emailSuccess').style.display = 'none';
+                    document.getElementById('emailSuccess').className = 'success-message';
+                }, 5000);
+            });
+        }
+
+        // Validazione email
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Carica l'email salvata quando si apre la sezione RSVP
+        function loadAdminEmail() {
+            const savedEmail = localStorage.getItem('adminRSVPEmail');
+            if (savedEmail) {
+                document.getElementById('adminEmail').value = savedEmail;
+            }
+        }
+
+        // Carica lo stato corrente dell'email
+        function loadEmailStatus() {
+            fetch('get_rsvp_email.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('currentEmailStatus').textContent = data.email;
+                        if (data.last_updated) {
+                            const date = new Date(data.last_updated);
+                            document.getElementById('lastUpdateStatus').textContent = date.toLocaleString('it-IT');
+                        }
+                    } else {
+                        document.getElementById('currentEmailStatus').textContent = 'Errore nel caricamento';
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore nel caricamento stato email:', error);
+                    document.getElementById('currentEmailStatus').textContent = 'Errore di connessione';
+                });
+        }
+
+        // Verifica l'email corrente nel server
+        function checkCurrentEmail() {
+            fetch('get_rsvp_email.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.email) {
+                        const currentEmail = data.email;
+                        const savedEmail = localStorage.getItem('adminRSVPEmail');
+                        
+                        // Se l'email salvata è diversa da quella corrente, aggiorna il campo
+                        if (savedEmail && savedEmail !== currentEmail) {
+                            document.getElementById('adminEmail').value = currentEmail;
+                            localStorage.setItem('adminRSVPEmail', currentEmail);
+                            
+                            // Aggiorna anche la configurazione localStorage
+                            const emailConfig = {
+                                rsvpEmail: currentEmail,
+                                lastUpdated: new Date().toISOString()
+                            };
+                            localStorage.setItem('rsvpEmailConfig', JSON.stringify(emailConfig));
+                        }
+                        
+                        // Aggiorna lo stato
+                        loadEmailStatus();
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore nel controllo email corrente:', error);
+                });
+        }
+        
+        // ========== FINE FUNZIONI EMAIL RSVP ==========
+        
         // Carica dati dal localStorage
         function loadAdminData() {
             // Home
@@ -1489,43 +1624,12 @@
         
         // ========== FUNZIONI PER GESTIONE RSVP ==========
         
-        // Salva l'email dell'admin nel localStorage
-        function saveAdminEmail() {
-            const adminEmail = document.getElementById('adminEmail').value;
-            
-            if (adminEmail && isValidEmail(adminEmail)) {
-                localStorage.setItem('adminRSVPEmail', adminEmail);
-                
-                // Mostra messaggio di successo
-                document.getElementById('emailSuccess').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('emailSuccess').style.display = 'none';
-                }, 3000);
-                
-                console.log('Email admin salvata:', adminEmail);
-            } else {
-                alert('Inserisci un indirizzo email valido.');
-            }
-        }
-
-        // Validazione email
-        function isValidEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-
-        // Carica l'email salvata quando si apre la sezione RSVP
-        function loadAdminEmail() {
-            const savedEmail = localStorage.getItem('adminRSVPEmail');
-            if (savedEmail) {
-                document.getElementById('adminEmail').value = savedEmail;
-            }
-        }
-        
         // Carica e visualizza la lista RSVP
         function loadRSVPList() {
             // Carica anche l'email dell'admin
             loadAdminEmail();
+            loadEmailStatus();
+            checkCurrentEmail();
             
             const rsvpListContainer = document.getElementById('rsvpListContainer');
             const rsvps = JSON.parse(localStorage.getItem('baptismRSVPs')) || [];
